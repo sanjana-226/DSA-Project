@@ -138,7 +138,7 @@ void mainMenu(int data[][], int cols)
     }
 }
 
-bool mainop1(){
+bool mainop1(int data[][], int cols){
     //need args of data 2d array? and the indexes
 
     for(int i =0;i<cols;i++)
@@ -153,7 +153,7 @@ bool mainop1(){
         }
     }
 }
-bool mainop2(){
+bool mainop2(int data[][], int cols){
     
     for(int i=0;i<cols;i++){
         for(int j=0;j<cols;j++){
@@ -165,16 +165,17 @@ bool mainop2(){
     }
     
 }
-bool mainop3(){
+bool mainop3(int data[][], int cols){
     //idek what that means tbh
 }
-bool mainop4(){
+bool mainop4(int data[][], int cols){
+    //for any i??
     if (data[i][i]==1)
     {
         return true;
     }    
 }
-bool mainop5(){
+bool mainop5(int data[][], int cols){
     for(int i=0;i<cols;i++){
         for(int j=0;j<cols;j++){
             if ((data[i][j]==1) && (data[j][i]==0))
@@ -184,7 +185,7 @@ bool mainop5(){
         }
     }
 }
-bool mainop6(){
+bool mainop6(int data[][], int cols){
     for(int i=0;i<cols;i++){
         for(int j=0;j<cols;j++){
             if ((data[i][j]==1) && (data[j][i]==0) && (i!=j))
@@ -194,14 +195,14 @@ bool mainop6(){
         }
     }
 }
-bool mainop7(){
+bool mainop7(int data[][], int cols){
     //do some study
 }
-bool mainop8(){
+bool mainop8(int data[][], int cols){
     //do some study
 }
 
-void menu2(int n){
+void menu2(int data[][], int cols,int n){
     printf("Menu 2");
     printf("Do you want to visualize how the network will look if we add the minimum links to satisfy the property?");
     char response[5];
@@ -212,39 +213,39 @@ void menu2(int n){
         switch(n)
         {
             case 1:
-            fill1();
+            fill1(data, cols);
             break;
             case 2:
-            fill2();
+            fill2(data, cols);
             break;
             case 3:
-            fill3();
+            fill3(data, cols);
             break;
             case 7:
-            fill7();
+            fill7(data, cols);
             break;
         }
     }
     else
     {
-        mainMenu();
+        mainMenu(data, cols);
     }
 }
 
-void fill1(){
+void fill1(int data[][], int cols){
 
 }
-void fill2(){
+void fill2(int data[][], int cols){
     
 }
-void fill3(){
+void fill3(int data[][], int cols){
     
 }
-void fill7(){
+void fill7(int data[][], int cols){
     
 }
 
-void menu3(){
+void menu3(int data[][], int cols){
     printf("Menu 3");
     printf("Do you want to know the nodes in each piece?");
     char response[5];
@@ -256,11 +257,11 @@ void menu3(){
     }
     else
     {
-        mainMenu();
+        mainMenu(data, cols);
     }
 }
 
-void menu4(){
+void menu4(int data[][], int cols){
     printf("Menu 4");
     printf("1. Display the hasse diagram");
     printf("2. Display the website whose link is available in every website");
@@ -278,20 +279,20 @@ void menu4(){
     switch (a)
     {
     case 1:
-        menu4op1();
+        menu4op1(data, cols);
         break;
     case 2:
-        if (mainop2())
-        menu4op2();
+        if (mainop2(data, cols))
+        menu4op2(data, cols);
         break;
     case 3:
-        menu4op3();
+        menu4op3(data, cols);
         break;
     case 4:
-        menu4op4();
+        menu4op4(data, cols);
         break;
     case 5:
-        menu4op5();
+        menu4op5(data, cols);
         break;
     case 6:
         
@@ -300,43 +301,43 @@ void menu4(){
         
         break;
     case 8:
-        if(checkLattice())
+        if(checkLattice(data, cols))
         {
-            menu5();
+            menu5(data, cols);
         }
         break;
     case 9:
-        mainMenu();
+        mainMenu(data, cols);
         break;
     }
 }
 
-void menu4op1(){
+void menu4op1(int data[][], int cols){
 
 }
-void menu4op2(){
+void menu4op2(int data[][], int cols){
     
 }
-void menu4op3(){
+void menu4op3(int data[][], int cols){
     
 }
-void menu4op4(){
+void menu4op4(int data[][], int cols){
     
 }
-void menu4op5(){
+void menu4op5(int data[][], int cols){
     
 }
-void menu4op6(){
+void menu4op6(int data[][], int cols){
     
 }
-void menu4op7(){
+void menu4op7(int data[][], int cols){
     
 }
-void checkLattice(){
+void checkLattice(int data[][], int cols){
     
 }
 
-void menu5(){
+void menu5(int data[][], int cols){
     printf("Menu 5");
     printf("1. Given 2 websites A and B, display the website which is reachable by both A and B and can also reach to all such websites that both A and B can reach");
     printf("2. Given 2 websites A and B, display the website that can reach both A and B and is also reachable from all such websites that can reach to both A and B");
@@ -349,26 +350,26 @@ void menu5(){
     switch (a)
     {
     case 1:
-        menu5op1();
+        menu5op1(data, cols);
         break;
     case 2:
-        menu5op2();
+        menu5op2(data, cols);
         break;
     case 3:
-        menu5op3();
+        menu5op3(data, cols);
         break;
     case 4:
-        menu4();
+        menu4(data, cols);
         break;
     }
 }
 
-void menu5op1(){
+void menu5op1(int data[][], int cols){
 
 }
-void menu5op2(){
+void menu5op2(int data[][], int cols){
     
 }
-void menu5op3(){
+void menu5op3(int data[][], int cols){
 
 }
