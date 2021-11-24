@@ -88,16 +88,12 @@ int main()
     parse_graph(fp);
     print_graph();
 
-    int data[cols][cols]; 
-    
-
-    mainMenu(cols);
+    mainMenu();
     return 0;
 }   
 
-void mainMenu(int cols)
+void mainMenu()
 {
-    //args are wrong??
     printf("Main Menu");
     printf("1. Does every website has a link to itself?");
     printf("2. Is it possible to always return back to the previous website from the current website in one step");
@@ -115,46 +111,46 @@ void mainMenu(int cols)
     switch (a)
     {
     case 1:
-        if (mainop1(cols))
+        if (mainop1())
         {
             printf("Yes");
-            mainMenu(cols);
+            mainMenu();
         }
         else
         {
             printf("No");
-            menu2(cols,1);
+            menu2(1);
         }
         break;
     case 2:
-        if (mainop2(cols))
+        if (mainop2())
         {
             printf("Yes");
-            mainMenu(cols);
+            mainMenu();
         }
         else
         {
             printf("No");
-            menu2(cols,2);
+            menu2(2);
         }
         break;
     case 3:
-        if (mainop3(cols))
+        if (mainop3())
         {
             printf("Yes");
-            mainMenu(cols);
+            mainMenu();
         }
         else
         {
             printf("No");
-            menu2(cols,3);
+            menu2(3);
         }
         break;
     case 4:
-        if (mainop4(cols))
+        if (mainop4())
         {
             printf("Yes");
-            mainMenu(cols);
+            mainMenu();
         }
         else
         {
@@ -162,51 +158,51 @@ void mainMenu(int cols)
         }
         break;
     case 5:
-        if (mainop5(cols))
+        if (mainop5())
         {
             printf("Yes");
-            mainMenu(cols);
+            mainMenu();
         }
         else
         {
             printf("No");
-            mainMenu(cols);
+            mainMenu();
         }
         break;
     case 6:
-        if (mainop6(cols))
+        if (mainop6())
         {
             printf("Yes");
-            mainMenu(cols);
+            mainMenu();
         }
         else
         {
             printf("No");
-            mainMenu(cols);
+            mainMenu();
         }
         break;
     case 7:
-        if (mainop7(cols))
+        if (mainop7())
         {
             printf("Yes");
-            menu2(cols,7);
+            menu2(7);
         }
         else
         {
             printf("No");
-            menu3(cols);
+            menu3();
         }
         break;
     case 8:
-        if (mainop8(cols))
+        if (mainop8())
         {
             printf("Yes");
-            menu4(cols);
+            menu4();
         }
         else
         {
             printf("No");
-            mainMenu(cols);
+            mainMenu();
         }
         break;
     case 9:
@@ -215,10 +211,10 @@ void mainMenu(int cols)
     }
 }
 
-bool mainop1(int cols){
+bool mainop1(){
     //need args of data 2d array? and the indexes
 
-    for(int i=0;i<cols;i++)
+    for(int i=0;i<website_count;i++)
     {
         if (is_connected(i,i)==0)
         {
@@ -230,10 +226,10 @@ bool mainop1(int cols){
         }
     }
 }
-bool mainop2(int cols){
+bool mainop2(){
     
-    for(int i=0;i<cols;i++){
-        for(int j=0;j<cols;j++){
+    for(int i=0;i<website_count;i++){
+        for(int j=0;j<website_count;j++){
             if ((is_connected(i,j)==1) && (is_connected(j,i)==1))
             {
                 return true;
@@ -242,9 +238,9 @@ bool mainop2(int cols){
     }
     
 }
-bool mainop3(int cols){
-    for(int i=0;i<cols;i++){
-        for(int j=0;j<cols;j++){
+bool mainop3(){
+    for(int i=0;i<website_count;i++){
+        for(int j=0;j<website_count;j++){
             if (is_connected(i,j)==0)
             {
                 return false;
@@ -252,9 +248,9 @@ bool mainop3(int cols){
         }
     }
 }
-bool mainop4(int cols){
+bool mainop4(){
     //for any i??
-for(int i=0;i<cols;i++){
+for(int i=0;i<website_count;i++){
     if (is_connected(i,i)==1)
         {
             return true;
@@ -262,9 +258,9 @@ for(int i=0;i<cols;i++){
 }
      
 }
-bool mainop5(int cols){
-    for(int i=0;i<cols;i++){
-        for(int j=0;j<cols;j++){
+bool mainop5(){
+    for(int i=0;i<website_count;i++){
+        for(int j=0;j<website_count;j++){
             if ((is_connected(i,j)==1) && (is_connected(j,i)==0))
             {
                 return true;
@@ -272,9 +268,9 @@ bool mainop5(int cols){
         }
     }
 }
-bool mainop6(int cols){
-    for(int i=0;i<cols;i++){
-        for(int j=0;j<cols;j++){
+bool mainop6(){
+    for(int i=0;i<website_count;i++){
+        for(int j=0;j<website_count;j++){
             if ((is_connected(i,j)==1) && (is_connected(j,i)==0) && (i!=j))
             {
                 return true;
@@ -282,14 +278,14 @@ bool mainop6(int cols){
         }
     }
 }
-bool mainop7(int cols){
+bool mainop7(){
     //do some study
 }
-bool mainop8(int cols){
+bool mainop8(){
     //do some study
 }
 
-void menu2(int cols,int n){
+void menu2(int n){
     printf("Menu 2");
     printf("Do you want to visualize how the network will look if we add the minimum links to satisfy the property?");
     char response[5];
@@ -300,39 +296,39 @@ void menu2(int cols,int n){
         switch(n)
         {
             case 1:
-            fill1(cols);
+            fill1();
             break;
             case 2:
-            fill2(cols);
+            fill2();
             break;
             case 3:
-            fill3(cols);
+            fill3();
             break;
             case 7:
-            fill7(cols);
+            fill7();
             break;
         }
     }
     else
     {
-        mainMenu(cols);
+        mainMenu();
     }
 }
 
-void fill1(int cols){
+void fill1(){
 
 }
-void fill2(int cols){
+void fill2(){
     
 }
-void fill3(int cols){
+void fill3(){
     
 }
-void fill7(int cols){
+void fill7(){
     
 }
 
-void menu3(int cols){
+void menu3(){
     printf("Menu 3");
     printf("Do you want to know the nodes in each piece?");
     char response[5];
@@ -344,11 +340,11 @@ void menu3(int cols){
     }
     else
     {
-        mainMenu(cols);
+        mainMenu();
     }
 }
 
-void menu4(int cols){
+void menu4(){
     printf("Menu 4");
     printf("1. Display the hasse diagram");
     printf("2. Display the website whose link is available in every website");
@@ -366,20 +362,20 @@ void menu4(int cols){
     switch (a)
     {
     case 1:
-        menu4op1(cols);
+        menu4op1();
         break;
     case 2:
-        if (mainop2(cols))
-        menu4op2(cols);
+        if (mainop2())
+        menu4op2();
         break;
     case 3:
-        menu4op3(cols);
+        menu4op3();
         break;
     case 4:
-        menu4op4(cols);
+        menu4op4();
         break;
     case 5:
-        menu4op5(cols);
+        menu4op5();
         break;
     case 6:
         
@@ -388,43 +384,43 @@ void menu4(int cols){
         
         break;
     case 8:
-        //if(checkLattice(cols))
+        //if(checkLattice())
         //{
-        //    menu5(cols);
+        //    menu5();
         //}
         //break;
     case 9:
-        mainMenu(cols);
+        mainMenu();
         break;
     }
 }
 
-void menu4op1(int cols){
+void menu4op1(){
 
 }
-void menu4op2(int cols){
+void menu4op2(){
     
 }
-void menu4op3(int cols){
+void menu4op3(){
     
 }
-void menu4op4(int cols){
+void menu4op4(){
     
 }
-void menu4op5(int cols){
+void menu4op5(){
     
 }
-void menu4op6(int cols){
+void menu4op6(){
     
 }
-void menu4op7(int cols){
+void menu4op7(){
     
 }
-void checkLattice(int cols){
+void checkLattice(){
     
 }
 
-void menu5(int cols){
+void menu5(){
     printf("Menu 5");
     printf("1. Given 2 websites A and B, display the website which is reachable by both A and B and can also reach to all such websites that both A and B can reach");
     printf("2. Given 2 websites A and B, display the website that can reach both A and B and is also reachable from all such websites that can reach to both A and B");
@@ -437,26 +433,26 @@ void menu5(int cols){
     switch (a)
     {
     case 1:
-        menu5op1(cols);
+        menu5op1();
         break;
     case 2:
-        menu5op2(cols);
+        menu5op2();
         break;
     case 3:
-        menu5op3(cols);
+        menu5op3();
         break;
     case 4:
-        menu4(cols);
+        menu4();
         break;
     }
 }
 
-void menu5op1(int cols){
+void menu5op1(){
 
 }
-void menu5op2(int cols){
+void menu5op2(){
     
 }
-void menu5op3(int cols){
+void menu5op3(){
 
 }
