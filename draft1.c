@@ -1,18 +1,29 @@
-#include <stdio.h>>
+#include <stdio.h>
 #include <stdbool.h>
 
 int main()
 {
     FILE *fp = fopen("SampleInput.csv", "r");
-
-    //find column nums
-
-    int cols = 5;
+    int cols=0;
+    char temp[1000];
+    fgets(temp, sizeof(temp), fp);
+    printf("%s", temp); 
+    for(int i = 0; i<strlen(temp); i++)
+    {
+        if (temp[i]==',')
+        {
+            cols++;
+        }
+    }
+    printf("%d", cols);
+    
 
     int data[cols][cols]; //only takes nums so no labels??
     //load data with 1s and 0s from input csv
     //labels are required for menu5 onwards so keep labels somehow??-but this might complicate things??
     //can keep 2 copies of my matrix?
+
+    //int data[2][2]={{1,0},{0,1}};
 
     mainMenu(data, cols);
     return 0;
@@ -46,11 +57,11 @@ void mainMenu(int data[][], int cols)
         else
         {
             printf("No");
-            menu2(1);
+            menu2(data, cols,1);
         }
         break;
     case 2:
-        if (mainop2())
+        if (mainop2(data, cols))
         {
             printf("Yes");
             mainMenu(data, cols);
@@ -58,11 +69,11 @@ void mainMenu(int data[][], int cols)
         else
         {
             printf("No");
-            menu2(2);
+            menu2(data, cols,2);
         }
         break;
     case 3:
-        if (mainop3())
+        if (mainop3(data, cols))
         {
             printf("Yes");
             mainMenu(data, cols);
@@ -70,11 +81,11 @@ void mainMenu(int data[][], int cols)
         else
         {
             printf("No");
-            menu2(3);
+            menu2(data, cols,3);
         }
         break;
     case 4:
-        if (mainop4())
+        if (mainop4(data, cols))
         {
             printf("Yes");
             mainMenu(data, cols);
@@ -85,7 +96,7 @@ void mainMenu(int data[][], int cols)
         }
         break;
     case 5:
-        if (mainop5())
+        if (mainop5(data, cols))
         {
             printf("Yes");
             mainMenu(data, cols);
@@ -97,7 +108,7 @@ void mainMenu(int data[][], int cols)
         }
         break;
     case 6:
-        if (mainop6())
+        if (mainop6(data, cols))
         {
             printf("Yes");
             mainMenu(data, cols);
@@ -109,22 +120,22 @@ void mainMenu(int data[][], int cols)
         }
         break;
     case 7:
-        if (mainop7())
+        if (mainop7(data, cols))
         {
             printf("Yes");
-            menu2(7);
+            menu2(data, cols,7);
         }
         else
         {
             printf("No");
-            menu3();
+            menu3(data, cols);
         }
         break;
     case 8:
-        if (mainop8())
+        if (mainop8(data, cols))
         {
             printf("Yes");
-            menu4();
+            menu4(data, cols);
         }
         else
         {
@@ -141,7 +152,7 @@ void mainMenu(int data[][], int cols)
 bool mainop1(int data[][], int cols){
     //need args of data 2d array? and the indexes
 
-    for(int i =0;i<cols;i++)
+    for(int i=0;i<cols;i++)
     {
         if (data[i][i]==0)
         {
@@ -170,10 +181,13 @@ bool mainop3(int data[][], int cols){
 }
 bool mainop4(int data[][], int cols){
     //for any i??
+for(int i=0;i<cols;i++){
     if (data[i][i]==1)
-    {
-        return true;
-    }    
+        {
+            return true;
+        }   
+}
+     
 }
 bool mainop5(int data[][], int cols){
     for(int i=0;i<cols;i++){
