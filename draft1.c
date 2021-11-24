@@ -16,6 +16,8 @@ bool mainop5();
 bool mainop6();
 bool mainop7();
 bool mainop8();
+bool checkTransitive();
+bool checkAntiSymm();
 void mainMenu();
 void menu2(int n);
 void fill1();
@@ -311,7 +313,33 @@ bool mainop7(){
     //do some study
 }
 bool mainop8(){
-    //do some study
+    if(mainop1()&&checkAntiSymm()&&checkTransitive())
+    {
+        return true;
+    }
+}
+
+bool checkTransitive(){
+    for(int i=0;i<website_count;i++){
+        for(int j=0;j<website_count;j++){
+            for( int k=0;k<website_count;k++){
+                if ((is_connected(i,j)) && (is_connected(j,k)) && (is_connected(i,k)))
+            {
+                    return true;
+            }
+            } 
+        }
+    }
+}
+bool checkAntiSymm(){
+    for(int i=0;i<website_count;i++){
+        for(int j=0;j<website_count;j++){
+            if ((is_connected(i,j)==1) && (is_connected(j,i)==0))
+            {
+                return true;
+            }
+        }
+    }
 }
 
 void menu2(int n){
