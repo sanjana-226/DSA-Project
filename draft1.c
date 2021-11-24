@@ -346,22 +346,48 @@ void menu2(int n){
 }
 
 void fill1(){
-    char* graph2 = malloc(strlen(graph)+1);
-    strcpy(graph2,graph);
+    char* graph1 = malloc(strlen(graph)+1);
+    strcpy(graph1,graph);
     for(int i=0;i<website_count;i++)
     {
         if (is_connected(i,i)==0)
         {
-            connect2(graph2,i,i);
+            connect2(graph1,i,i);
         }
+    }
+    plot(graph1);
+}
+void fill2(){
+    char* graph2 = malloc(strlen(graph)+1);
+    strcpy(graph2,graph);
+    for(int i=0;i<website_count;i++)
+    {
+        for(int j=0;j<website_count;j++)
+        {
+            if (is_connected(i,j)==1)
+                    {
+                        connect2(graph2,j,i);
+                    }
+        }
+        
     }
     plot(graph2);
 }
-void fill2(){
-
-}
 void fill3(){
-    
+    char* graph3 = malloc(strlen(graph)+1);
+    strcpy(graph3,graph);
+    for(int i=0;i<website_count;i++)
+    {
+        for(int j=0;j<website_count;j++)
+        {
+            if (is_connected(i,j)==0)
+                    {
+                        connect2(graph3,i,j);
+                    }
+        }
+        
+    }
+    plot(graph3);
 }
 void fill7(){
     
