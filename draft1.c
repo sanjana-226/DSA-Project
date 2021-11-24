@@ -220,7 +220,7 @@ bool mainop1(int data[][], int cols){
 
     for(int i=0;i<cols;i++)
     {
-        if (data[i][i]==0)
+        if (is_connected(i,i)==0)
         {
             return false;
         }
@@ -234,7 +234,7 @@ bool mainop2(int data[][], int cols){
     
     for(int i=0;i<cols;i++){
         for(int j=0;j<cols;j++){
-            if ((data[i][j]==1) && (data[j][i]==1))
+            if ((is_connected(i,j)==1) && (is_connected(j,i)==1))
             {
                 return true;
             }
@@ -245,7 +245,7 @@ bool mainop2(int data[][], int cols){
 bool mainop3(int data[][], int cols){
     for(int i=0;i<cols;i++){
         for(int j=0;j<cols;j++){
-            if (data[i][j]==0)
+            if (is_connected(i,j)==0)
             {
                 return false;
             }   
@@ -255,7 +255,7 @@ bool mainop3(int data[][], int cols){
 bool mainop4(int data[][], int cols){
     //for any i??
 for(int i=0;i<cols;i++){
-    if (data[i][i]==1)
+    if (is_connected(i,i)==1)
         {
             return true;
         }   
@@ -265,7 +265,7 @@ for(int i=0;i<cols;i++){
 bool mainop5(int data[][], int cols){
     for(int i=0;i<cols;i++){
         for(int j=0;j<cols;j++){
-            if ((data[i][j]==1) && (data[j][i]==0))
+            if ((is_connected(i,j)==1) && (is_connected(j,i)==0))
             {
                 return true;
             }
@@ -275,7 +275,7 @@ bool mainop5(int data[][], int cols){
 bool mainop6(int data[][], int cols){
     for(int i=0;i<cols;i++){
         for(int j=0;j<cols;j++){
-            if ((data[i][j]==1) && (data[j][i]==0) && (i!=j))
+            if ((is_connected(i,j)==1) && (is_connected(j,i)==0) && (i!=j))
             {
                 return true;
             }
