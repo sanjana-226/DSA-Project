@@ -60,7 +60,6 @@ void print_header(){
 }
 
 void parse_header(char* header){
-    printf("begin of parse header");
     int count=0;
     websites = malloc(sizeof(char*)*100);
     
@@ -79,11 +78,9 @@ void parse_header(char* header){
         }
     }
     website_count = count;
-    printf("end of parse header");
 }
 
 void parse_graph(FILE* fp){
-    printf("in the parse graph");
     graph = calloc(sizeof(bool)*website_count, website_count);
     for(int row = 0; row<website_count; row++){
         while(getc(fp)!=',') ; //skip the first column
@@ -99,43 +96,28 @@ void parse_graph(FILE* fp){
 int main()
 {
     FILE *fp = fopen("SampleInput.csv", "r");
-    int cols=0;
-    char temp[1000];
-    fgets(temp, sizeof(temp), fp);
-    printf("%s", temp); 
-    for(int i = 0; i<strlen(temp); i++)
-    {
-        if (temp[i]==',')
-        {
-            cols++;
-        }
-    }
-    printf("%d", cols);
-    
     char header[1000];
     fgets(header, sizeof(header), fp);
     parse_header(header);
     print_header();
     parse_graph(fp);
     print_graph();
-    printf("going to run main");
     mainMenu();
-    printf("ran main");
     return 0;
 }   
 
 void mainMenu()
 {
-    printf("Main Menu");
-    printf("1. Does every website has a link to itself?");
-    printf("2. Is it possible to always return back to the previous website from the current website in one step");
-    printf("3. Does every website has all the links to websites which are reachable from it?");
-    printf("4. Does there exist any website that contains a list to itself?");
-    printf("5. Is it impossible to return to the previous website from the current website in one step?");
-    printf("6. Is it impossible to return to the previous website from the current website in one step (excluding cases where the current and previous website is the same)?");
-    printf("7. Is it possible to divide the network into multiple pieces such that every website n a piece is reachable from every other website in that piece?");
-    printf("8. Is this relation an example of poset?");
-    printf("9. Exit");
+    printf("Main Menu\n");
+    printf("1. Does every website has a link to itself?\n");
+    printf("2. Is it possible to always return back to the previous website from the current website in one step\n");
+    printf("3. Does every website has all the links to websites which are reachable from it?\n");
+    printf("4. Does there exist any website that contains a list to itself?\n");
+    printf("5. Is it impossible to return to the previous website from the current website in one step?\n");
+    printf("6. Is it impossible to return to the previous website from the current website in one step (excluding cases where the current and previous website is the same)?\n");
+    printf("7. Is it possible to divide the network into multiple pieces such that every website n a piece is reachable from every other website in that piece?\n");
+    printf("8. Is this relation an example of poset?\n");
+    printf("9. Exit\n\n");
 
     int a;
     scanf("%d", &a);
@@ -145,95 +127,95 @@ void mainMenu()
     case 1:
         if (mainop1())
         {
-            printf("Yes");
+            printf("Yes\n\n");
             mainMenu();
         }
         else
         {
-            printf("No");
+            printf("No\n\n");
             menu2(1);
         }
         break;
     case 2:
         if (mainop2())
         {
-            printf("Yes");
+            printf("Yes\n\n");
             mainMenu();
         }
         else
         {
-            printf("No");
+            printf("No\n\n");
             menu2(2);
         }
         break;
     case 3:
         if (mainop3())
         {
-            printf("Yes");
+            printf("Yes\n\n");
             mainMenu();
         }
         else
         {
-            printf("No");
+            printf("No\n\n");
             menu2(3);
         }
         break;
     case 4:
         if (mainop4())
         {
-            printf("Yes");
+            printf("Yes\n\n");
             mainMenu();
         }
         else
         {
-            printf("No");
+            printf("No\n\n");
         }
         break;
     case 5:
         if (mainop5())
         {
-            printf("Yes");
+            printf("Yes\n\n");
             mainMenu();
         }
         else
         {
-            printf("No");
+            printf("No\n\n");
             mainMenu();
         }
         break;
     case 6:
         if (mainop6())
         {
-            printf("Yes");
+            printf("Yes\n\n");
             mainMenu();
         }
         else
         {
-            printf("No");
+            printf("No\n\n");
             mainMenu();
         }
         break;
     case 7:
         if (mainop7())
         {
-            printf("Yes");
+            printf("Yes\n\n");
             menu2(7);
         }
         else
         {
-            printf("No");
+            printf("No\n\n");
             menu3();
         }
         break;
     case 8:
         if (mainop8())
         {
-            printf("Yes");
+            printf("Yes\n\n");
             menu4();
         }
         else
         {
-            printf("No");
+            printf("No\n\n");
             mainMenu();
         }
         break;
@@ -318,8 +300,8 @@ bool mainop8(){
 }
 
 void menu2(int n){
-    printf("Menu 2");
-    printf("Do you want to visualize how the network will look if we add the minimum links to satisfy the property?");
+    printf("Menu 2\n");
+    printf("Do you want to visualize how the network will look if we add the minimum links to satisfy the property?\n");
     char response[5];
     scanf("%s", response);
 
@@ -343,6 +325,7 @@ void menu2(int n){
     }
     else
     {
+        printf("\n");
         mainMenu();
     }
 }
@@ -361,8 +344,8 @@ void fill7(){
 }
 
 void menu3(){
-    printf("Menu 3");
-    printf("Do you want to know the nodes in each piece?");
+    printf("Menu 3\n");
+    printf("Do you want to know the nodes in each piece?\n\n");
     char response[5];
     scanf("%s", response);
 
@@ -377,16 +360,16 @@ void menu3(){
 }
 
 void menu4(){
-    printf("Menu 4");
-    printf("1. Display the hasse diagram");
-    printf("2. Display the website whose link is available in every website");
-    printf("3. Display the website whcih has links of every website");
-    printf("4. Display the websites which do not have links to any other website except itself");
-    printf("5. Display websites which can't be reached by any website except itself");
-    printf("6. Given some websites, display the websites which are reachable from all of them");
-    printf("7. Given some website display all the websites from which you can reach all those websites");
-    printf("8. Is this relation a lattice");
-    printf("9. Return to Main Menu");
+    printf("Menu 4\n");
+    printf("1. Display the hasse diagram\n");
+    printf("2. Display the website whose link is available in every website\n");
+    printf("3. Display the website whcih has links of every website\n");
+    printf("4. Display the websites which do not have links to any other website except itself\n");
+    printf("5. Display websites which can't be reached by any website except itself\n");
+    printf("6. Given some websites, display the websites which are reachable from all of them\n");
+    printf("7. Given some website display all the websites from which you can reach all those websites\n");
+    printf("8. Is this relation a lattice\n");
+    printf("9. Return to Main Menu\n\n");
 
     int a;
     scanf("%d", &a);
@@ -425,6 +408,7 @@ void menu4(){
         mainMenu();
         break;
     }
+    printf("\n");
 }
 
 void menu4op1(){
@@ -453,11 +437,11 @@ void checkLattice(){
 }
 
 void menu5(){
-    printf("Menu 5");
-    printf("1. Given 2 websites A and B, display the website which is reachable by both A and B and can also reach to all such websites that both A and B can reach");
-    printf("2. Given 2 websites A and B, display the website that can reach both A and B and is also reachable from all such websites that can reach to both A and B");
-    printf("3. Is the lattice distributive?");
-    printf("4. Return to Menu 4");
+    printf("Menu 5\n");
+    printf("1. Given 2 websites A and B, display the website which is reachable by both A and B and can also reach to all such websites that both A and B can reach\n");
+    printf("2. Given 2 websites A and B, display the website that can reach both A and B and is also reachable from all such websites that can reach to both A and B\n");
+    printf("3. Is the lattice distributive?\n");
+    printf("4. Return to Menu 4\n\n");
 
     int a;
     scanf("%d", &a);
@@ -487,5 +471,5 @@ void menu5op2(){
 }
 void menu5op3(){
 
-}
 
+}
