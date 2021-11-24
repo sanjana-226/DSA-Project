@@ -1,5 +1,69 @@
 #include <stdio.h>
-#include <stdbool.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdbool.h> 
+
+char** websites;
+char* graph;
+int website_count=0;
+
+void connect(int i, int j){
+    graph[i*website_count+j] = true;
+}
+
+bool is_connected(int i, int j){
+    return graph[i*website_count+j];
+}
+
+void print_graph(){
+    for (int i = 0; i < website_count; i++) {
+        for (int j = 0; j < website_count; j++) {
+            printf("%d ", is_connected(i,j));
+        }
+        printf("\n");
+    }
+}
+
+void print_header(){
+    printf("%d\n", website_count);
+    for(int i = 0; i< website_count; i++)
+        printf("%s\n", websites[i]);
+}
+
+void parse_header(char* header){
+    
+    int count=0;
+    websites = malloc(sizeof(char*)*100);
+    
+    char* website = (char*) malloc(sizeof(char)*100);
+    for(int i = 1; i<strlen(header); i++)
+    {
+        if (header[i]==',' || i == strlen(header)-1)
+        {
+            strncat(website, "\0", 1);
+            websites[count] = website;
+            website = (char*) malloc(sizeof(char)*100);
+            count++;
+        }
+        else{
+            strncat(website, &header[i], 1);
+        }
+    }
+    website_count = count;
+}
+
+void parse_graph(FILE* fp){
+    graph = calloc(sizeof(bool)*website_count, website_count);
+    for(int row = 0; row<website_count; row++){
+        while(getc(fp)!=',') ; //skip the first column
+        for (int col = 0; col < website_count; col++) {
+            if(getc(fp)=='1')
+                connect(row,col);
+            if(col!=website_count-1) // not last iteration
+                getc(fp);
+        }
+    }
+}
 
 int main()
 {
@@ -17,13 +81,15 @@ int main()
     }
     printf("%d", cols);
     
+    char header[1000];
+    fgets(header, sizeof(header), fp);
+    parse_header(header);
+    print_header();
+    parse_graph(fp);
+    print_graph();
 
-    int data[cols][cols]; //only takes nums so no labels??
-    //load data with 1s and 0s from input csv
-    //labels are required for menu5 onwards so keep labels somehow??-but this might complicate things??
-    //can keep 2 copies of my matrix?
-
-    //int data[2][2]={{1,0},{0,1}};
+    int data[cols][cols]; 
+    
 
     mainMenu(data, cols);
     return 0;
@@ -144,7 +210,7 @@ void mainMenu(int data[][], int cols)
         }
         break;
     case 9:
-        exit();
+        exit(0);
         break;
     }
 }
@@ -177,7 +243,14 @@ bool mainop2(int data[][], int cols){
     
 }
 bool mainop3(int data[][], int cols){
-    //idek what that means tbh
+    for(int i=0;i<cols;i++){
+        for(int j=0;j<cols;j++){
+            if (data[i][j]==0)
+            {
+                return false;
+            }   
+        }
+    }
 }
 bool mainop4(int data[][], int cols){
     //for any i??
