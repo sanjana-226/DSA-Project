@@ -509,10 +509,22 @@ void menu4op3(){
     }
 }
 void menu4op4(){
-    
+    for(int i=0;i<website_count;i++){
+        for(int j=0;j<website_count;j++){
+            if( (is_connected(i,i)==1) && (is_connected(i,j)==0) ){
+                printf(websites[i]);
+            }
+        }
+    }
 }
 void menu4op5(){
-    
+    for(int i=0;i<website_count;i++){
+        for(int j=0;j<website_count;j++){
+            if( (is_connected(i,i)==1) && (is_connected(j,i)==0) ){
+                printf(websites[i]);
+            }
+        }
+    }
 }
 void menu4op6(){
     
