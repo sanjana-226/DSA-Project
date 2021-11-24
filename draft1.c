@@ -564,10 +564,89 @@ void menu5(){
 }
 
 void menu5op1(){
+    char A[100];
+    int AIndex;
+    int BIndex;
+    scanf("Type the first website %s", A);
+    
+    for(int i=0;i<website_count;i++){
+        if(strcmp(websites[i],A)){
+            AIndex=i;
+        }
+        else{
+            //deal with this somehow?
+        }
+    }
 
+    char B[100];
+    scanf("Type the second website %s", B);
+    
+    for(int i=0;i<website_count;i++){
+        if(strcmp(websites[i],B)){
+            BIndex=i;
+        }
+        else{
+            //deal with this somehow?
+        }
+    }
+    
+
+    for(int x=0;x<website_count;x++){
+        if( (is_connected(AIndex,x)) && (is_connected(BIndex,x))){
+            for(int y=0;y<website_count;y++){
+                if ( (is_connected(AIndex,y)) && (is_connected(BIndex,y)) && (is_connected(x,y))){
+                    printf(websites[x]);
+                }
+            }
+        }
+    }
+    // is the connected function correct - if not replace with a new path function 
 }
 void menu5op2(){
+
+    char A[100];
+    int AIndex;
+    int BIndex;
+    scanf("Type the first website %s", A);
     
+    for(int i=0;i<website_count;i++){
+        if(strcmp(websites[i],A)){
+            AIndex=i;
+        }
+        else{
+            //deal with this somehow?
+        }
+    }
+
+    char B[100];
+    scanf("Type the second website %s", B);
+    
+    for(int i=0;i<website_count;i++){
+        if(strcmp(websites[i],B)){
+            BIndex=i;
+        }
+        else{
+            //deal with this somehow?
+        }
+    }
+    
+
+    for(int x=0;x<website_count;x++){
+        if( (is_connected(x,AIndex)) && (is_connected(x,BIndex))){
+            for(int y=0;y<website_count;y++){
+                if ( (is_connected(y,AIndex)) && (is_connected(y,BIndex)) && (is_connected(y,x))){
+                    printf(websites[x]);
+                }
+            }
+        }
+    }
+    //take 2 ips-a and b
+    //give the ips a number
+    //find an website[x]
+    //where () is either is_connected or a new path function??
+    //st (x,a) and (x,b) 
+    // and if (y,a) and (y,b) then (y,x)
+    //print website[x]
 }
 void menu5op3(){
 
