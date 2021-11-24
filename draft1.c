@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stdbool.h> 
+#include <stdbool.h>
+#include<unistd.h> 
 
 char** websites;
 char* graph;
@@ -36,7 +37,21 @@ void menu5op1();
 void menu5op2();
 void menu5op3();
 
+void plot(char * fname){
+    int pid;
+    if((pid = fork())==0){
+        if(execlp("python", "python","visualise.py",fname,(char*)NULL)==-1){
+        	execlp("python3", "python3","visualise.py",fname,(char*)NULL);
+        };
+    }
+    exit(0);
+}
+
 void connect(int i, int j){
+    graph[i*website_count+j] = true;
+}
+
+void connect2(char* graph,int i, int j){
     graph[i*website_count+j] = true;
 }
 
@@ -331,10 +346,19 @@ void menu2(int n){
 }
 
 void fill1(){
-
+    char* graph2 = malloc(strlen(graph)+1);
+    strcpy(graph2,graph);
+    for(int i=0;i<website_count;i++)
+    {
+        if (is_connected(i,i)==0)
+        {
+            connect2(graph2,i,i);
+        }
+    }
+    plot(graph2);
 }
 void fill2(){
-    
+
 }
 void fill3(){
     
