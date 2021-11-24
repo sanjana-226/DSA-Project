@@ -7,6 +7,35 @@ char** websites;
 char* graph;
 int website_count=0;
 
+bool mainop1();
+bool mainop2();
+bool mainop3();
+bool mainop4();
+bool mainop5();
+bool mainop6();
+bool mainop7();
+bool mainop8();
+void mainMenu();
+void menu2(int n);
+void fill1();
+void fill2();
+void fill3();
+void fill7();
+void menu3();
+void menu4();
+void menu4op1();
+void menu4op2();
+void menu4op3();
+void menu4op4();
+void menu4op5();
+void menu4op6();
+void menu4op7();
+void checkLattice();
+void menu5();
+void menu5op1();
+void menu5op2();
+void menu5op3();
+
 void connect(int i, int j){
     graph[i*website_count+j] = true;
 }
@@ -31,7 +60,7 @@ void print_header(){
 }
 
 void parse_header(char* header){
-    
+    printf("begin of parse header");
     int count=0;
     websites = malloc(sizeof(char*)*100);
     
@@ -50,9 +79,11 @@ void parse_header(char* header){
         }
     }
     website_count = count;
+    printf("end of parse header");
 }
 
 void parse_graph(FILE* fp){
+    printf("in the parse graph");
     graph = calloc(sizeof(bool)*website_count, website_count);
     for(int row = 0; row<website_count; row++){
         while(getc(fp)!=',') ; //skip the first column
@@ -87,8 +118,9 @@ int main()
     print_header();
     parse_graph(fp);
     print_graph();
-
+    printf("going to run main");
     mainMenu();
+    printf("ran main");
     return 0;
 }   
 
@@ -456,3 +488,4 @@ void menu5op2(){
 void menu5op3(){
 
 }
+
