@@ -364,33 +364,63 @@ bool checkAntiSymm(){
 void menu2(int n){
     printf("Menu 2\n");
     printf("Do you want to visualize how the network will look if we add the minimum links to satisfy the property?\n");
-    char response[100];
-    scanf("%s", &response);
-    
-    if (strcmp(response,"Y") == 0)
-    {
+    char *response[100];
+    scanf("%s", response);
+    printf("response is %s\n", response);
+    printf("menu 1 operation n is %d\n",n);
+    char correct[]="yes";
+    //int k = strncmp(response,correct,3);
+    int k=0;
+    printf("comparison num k is %d\n",k);
+    printf("before the if");
+    if(k==0){
+        printf("in the if");
         switch(n)
         {
             case 1:
-            fill1();
-            break;
+                fill1();
+                break;
             case 2:
-            fill2();
-            break;
+                fill2();
+                break;
             case 3:
-            fill3();
-            break;
+                printf("in switch");
+                fill3();
+                break;
             case 7:
-            fill7();
-            break;
+                fill7();
+                break;
         }
     }
-    else
-    {
+    else{
         printf("\n");
         mainMenu();
     }
-    printf("menu2 outwards");
+
+
+    // if (k == 0)
+    // {
+    //     switch(n)
+    //     {
+    //         case 1:
+    //         fill1();
+    //         break;
+    //         case 2:
+    //         fill2();
+    //         break;
+    //         case 3:
+    //         fill3();
+    //         break;
+    //         case 7:
+    //         fill7();
+    //         break;
+    //     }
+    // }
+    // else
+    // {
+    //     printf("\n");
+    //     mainMenu();
+    // }
 }
 
 void fill1(){
