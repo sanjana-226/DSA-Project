@@ -93,8 +93,7 @@ void parse_header(char* header){
     char* website = (char*) malloc(sizeof(char)*100);
     for(int i = 1; i<strlen(header); i++)
     {
-        if (header[i]==',' || i == strlen(header)-1)
-        {
+if (header[i]==',' || header[i]=='\n' || i == strlen(header)-1)        {
             strncat(website, "\0", 1);
             websites[count] = website;
             website = (char*) malloc(sizeof(char)*100);
@@ -123,16 +122,21 @@ void parse_graph(FILE* fp){
 void convertToCSV(char* graph){
     FILE *p;
     p=fopen("graph.csv","w");
+    fprintf(p,","); // first entry
     for(int i=0;i<website_count;i++){
-    fprintf(p, "%s", websites[i]);    
+        fprintf(p, "%s %d ,", websites[i],i); //headers w numbers and comma
     }
 
     for(int i=0;i<website_count;i++){
-    fprintf(p, "%s", websites[i]);
-        for(int j=0;j<website_count;j++){
-             fprintf(p, "%s", is_connected2(graph,i,j));        
-        } 
-    }
+
+        fprintf(p, "%s", websites[i]);
+        fprintf(p,",");
+        for(int j=0;j<website_count;j++)
+            {
+                fprintf(p, "%d,", is_connected2(graph,i,j));       
+            } 
+            fprintf(p,"\n");
+        }
 }
 
 int main()
@@ -146,6 +150,8 @@ int main()
     print_graph();
     mainMenu();
     return 0;
+
+    
 }   
 
 void mainMenu()
@@ -364,17 +370,14 @@ bool checkAntiSymm(){
 void menu2(int n){
     printf("Menu 2\n");
     printf("Do you want to visualize how the network will look if we add the minimum links to satisfy the property?\n");
-    char *response[100];
+    char response[100];
     scanf("%s", response);
-    printf("response is %s\n", response);
-    printf("menu 1 operation n is %d\n",n);
-    char correct[]="yes";
+    
+    //char correct[]="yes";
     //int k = strncmp(response,correct,3);
+    
     int k=0;
-    printf("comparison num k is %d\n",k);
-    printf("before the if");
     if(k==0){
-        printf("in the if");
         switch(n)
         {
             case 1:
@@ -384,7 +387,7 @@ void menu2(int n){
                 fill2();
                 break;
             case 3:
-                printf("in switch");
+                // printf("in switch");
                 fill3();
                 break;
             case 7:
@@ -397,30 +400,6 @@ void menu2(int n){
         mainMenu();
     }
 
-
-    // if (k == 0)
-    // {
-    //     switch(n)
-    //     {
-    //         case 1:
-    //         fill1();
-    //         break;
-    //         case 2:
-    //         fill2();
-    //         break;
-    //         case 3:
-    //         fill3();
-    //         break;
-    //         case 7:
-    //         fill7();
-    //         break;
-    //     }
-    // }
-    // else
-    // {
-    //     printf("\n");
-    //     mainMenu();
-    // }
 }
 
 void fill1(){
@@ -454,10 +433,8 @@ void fill2(){
     
 }
 void fill3(){
-    char* graph3 = malloc(sizeof(bool)*website_count*website_count*website_count);
-    //char* graph3 = malloc(100000);
-    printf("2");
-    strcpy(graph3,graph);
+    char* graph3 = malloc(sizeof(char)*website_count*website_count);
+    memcpy(graph3,graph,sizeof(char)*website_count*website_count);
     for(int i=0;i<website_count;i++)
     {
         for(int j=0;j<website_count;j++)
