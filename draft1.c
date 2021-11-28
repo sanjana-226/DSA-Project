@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
-#include<unistd.h> 
+#include <unistd.h> 
 
 char** websites;
 char* graph;
@@ -38,6 +38,8 @@ void menu5();
 void menu5op1();
 void menu5op2();
 void menu5op3();
+bool is_connected(int i, int j);
+bool is_connected2(char* graph, int i, int j);
 
 void plot(char * fname){
     int pid;
@@ -59,6 +61,14 @@ void connect2(char* graph,int i, int j){
 
 bool is_connected(int i, int j){
     return graph[i*website_count+j];
+}
+
+bool is_connected2(char* graph, int i, int j){
+    return graph[i*website_count+j];
+}
+
+bool path(){
+    //check if a path exists
 }
 
 void print_graph(){
@@ -107,6 +117,21 @@ void parse_graph(FILE* fp){
             if(col!=website_count-1) // not last iteration
                 getc(fp);
         }
+    }
+}
+
+void convertToCSV(char* graph){
+    FILE *p;
+    p=fopen("graph.csv","w");
+    for(int i=0;i<website_count;i++){
+    fprintf(p, "%s", websites[i]);    
+    }
+
+    for(int i=0;i<website_count;i++){
+    fprintf(p, "%s", websites[i]);
+        for(int j=0;j<website_count;j++){
+             fprintf(p, "%s", is_connected2(graph,i,j));        
+        } 
     }
 }
 
@@ -243,8 +268,6 @@ void mainMenu()
 }
 
 bool mainop1(){
-    //need args of data 2d array? and the indexes
-
     for(int i=0;i<website_count;i++)
     {
         if (is_connected(i,i)==0)
@@ -258,7 +281,6 @@ bool mainop1(){
     }
 }
 bool mainop2(){
-    
     for(int i=0;i<website_count;i++){
         for(int j=0;j<website_count;j++){
             if ((is_connected(i,j)==1) && (is_connected(j,i)==1))
@@ -267,7 +289,6 @@ bool mainop2(){
             }
         }
     }
-    
 }
 bool mainop3(){
     for(int i=0;i<website_count;i++){
@@ -286,8 +307,7 @@ for(int i=0;i<website_count;i++){
         {
             return true;
         }   
-}
-     
+    }  
 }
 bool mainop5(){
     for(int i=0;i<website_count;i++){
@@ -318,7 +338,6 @@ bool mainop8(){
         return true;
     }
 }
-
 bool checkTransitive(){
     for(int i=0;i<website_count;i++){
         for(int j=0;j<website_count;j++){
@@ -345,10 +364,10 @@ bool checkAntiSymm(){
 void menu2(int n){
     printf("Menu 2\n");
     printf("Do you want to visualize how the network will look if we add the minimum links to satisfy the property?\n");
-    char response[5];
-    scanf("%s", response);
-
-    if (strcmp(response,"Yes") == 0)
+    char response[100];
+    scanf("%s", &response);
+    
+    if (strcmp(response,"Y") == 0)
     {
         switch(n)
         {
@@ -371,6 +390,7 @@ void menu2(int n){
         printf("\n");
         mainMenu();
     }
+    printf("menu2 outwards");
 }
 
 void fill1(){
@@ -397,12 +417,16 @@ void fill2(){
                         connect2(graph2,j,i);
                     }
         }
-        
     }
-    plot(graph2);
+    //plot(graph2);
+    //printf("SampleInput.csv");
+    //plot("SampleInput.csv");
+    
 }
 void fill3(){
-    char* graph3 = malloc(strlen(graph)+1);
+    char* graph3 = malloc(sizeof(bool)*website_count*website_count*website_count);
+    //char* graph3 = malloc(100000);
+    printf("2");
     strcpy(graph3,graph);
     for(int i=0;i<website_count;i++)
     {
@@ -413,9 +437,9 @@ void fill3(){
                         connect2(graph3,i,j);
                     }
         }
-        
     }
-    plot(graph3);
+    convertToCSV(graph3);
+    plot("graph.csv");
 }
 void fill7(){
     
@@ -429,7 +453,7 @@ void menu3(){
 
     if (strcmp(response,"Yes") == 0)
     {
-        
+        //find nodes,print
     }
     else
     {
@@ -527,10 +551,70 @@ void menu4op5(){
     }
 }
 void menu4op6(){
-    
+    char inputs[100];
+    scanf("Type the names of the websites(space separated)%[^\n]",inputs);
+    char delim[]=" ";
+    char *ptr = strtok(inputs, delim);
+    while(ptr != NULL)
+	{
+		printf("'%s'\n", ptr);
+		ptr = strtok(NULL, delim);
+	}
+    int inputIndex[100];
+    int count=strlen(inputs);
+
+    for(int i=0;i<count;i++){
+        for(int j=0;j<website_count;j++){
+            if(strcmp(websites[j],inputs[i])){
+            inputIndex[i]=j;
+        }
+        else{
+            //deal with this somehow?
+        }
+        }
+    }
+
+    for(int x=0;x<website_count;x++){
+        for(int i=0;i<count;i++){
+            if (is_connected(inputIndex[i],x)==0){
+                printf(websites[x]);
+                //this doesnt make logical sense
+            }
+        }
+    }
 }
 void menu4op7(){
-    
+    char inputs[100];
+    scanf("Type the names of the websites(space separated)%[^\n]",inputs);
+    char delim[]=" ";
+    char *ptr = strtok(inputs, delim);
+    while(ptr != NULL)
+	{
+		printf("'%s'\n", ptr);
+		ptr = strtok(NULL, delim);
+	}
+    int inputIndex[100];
+    int count=strlen(inputs);
+
+    for(int i=0;i<count;i++){
+        for(int j=0;j<website_count;j++){
+            if(strcmp(websites[j],inputs[i])){
+            inputIndex[i]=j;
+        }
+        else{
+            //deal with this somehow?
+        }
+        }
+    }
+
+    for(int x=0;x<website_count;x++){
+        for(int i=0;i<count;i++){
+            if (is_connected(x,inputIndex[i])==0){
+                printf(websites[x]);
+                //this doesnt make logical sense
+            }
+        }
+    }
 }
 void checkLattice(){
     
@@ -615,6 +699,8 @@ void menu5op2(){
         }
         else{
             //deal with this somehow?
+            //printf("Invalid Website");
+            //menu5op2();
         }
     }
 
@@ -627,6 +713,8 @@ void menu5op2(){
         }
         else{
             //deal with this somehow?
+            //printf("Invalid Website");
+            //menu5op2();
         }
     }
     
@@ -649,6 +737,6 @@ void menu5op2(){
     //print website[x]
 }
 void menu5op3(){
-
+    
 
 }
