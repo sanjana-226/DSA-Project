@@ -59,6 +59,10 @@ void connect2(char* graph,int i, int j){
     graph[i*website_count+j] = true;
 }
 
+void disconnect2(char* graph,int i, int j){
+    graph[i*website_count+j] = false;
+}
+
 bool is_connected(int i, int j){
     return graph[i*website_count+j];
 }
@@ -122,11 +126,11 @@ void parse_header(char *header)
 void parse_graph(FILE* fp){
     graph = calloc(sizeof(bool)*website_count, website_count);
     for(int row = 0; row<website_count; row++){
-        while(getc(fp)!=',') ; //skip the first column
+        while(getc(fp)!=',') ; 
         for (int col = 0; col < website_count; col++) {
             if(getc(fp)=='1')
                 connect(row,col);
-            if(col!=website_count-1) // not last iteration
+            if(col!=website_count-1) 
                 getc(fp);
         }
     }
@@ -136,11 +140,11 @@ void convertToCSV(bool *graph)
 {
     FILE *p;
     p = fopen("graph.csv", "w");
-    fprintf(p,","); // first entry
+    fprintf(p,","); 
 
     for (int i = 0; i < website_count; i++)
     {
-        fprintf(p, "%s", websites[i], i); //headers w numbers and comma
+        fprintf(p, "%s", websites[i], i); 
         if (i != website_count - 1)
             fprintf(p, ",");
     }
@@ -160,27 +164,6 @@ void convertToCSV(bool *graph)
     fclose(p);
 }
 
-// void convertToCSV(char* graph){
-//     FILE *p;
-//     p=fopen("graph.csv","w");
-//     fprintf(p,","); // first entry
-//     for(int i=0;i<website_count;i++){
-//         fprintf(p, "%s %d ,", websites[i],i); //headers w numbers and comma
-//     }
-    
-
-//     for(int i=0;i<website_count;i++){
-
-//         fprintf(p, "%s", websites[i]);
-//         fprintf(p,",");
-//         for(int j=0;j<website_count;j++)
-//             {
-//                 fprintf(p, "%d,", is_connected2(graph,i,j));       
-//             } 
-//             fprintf(p,"\n");
-//         }
-// }
-
 int main()
 {
     FILE *fp = fopen("SampleInput.csv", "r");
@@ -191,9 +174,7 @@ int main()
     parse_graph(fp);
     print_graph();
     mainMenu();
-    return 0;
-
-    
+    return 0;  
 }   
 
 void mainMenu()
@@ -445,8 +426,8 @@ void menu2(int n){
 }
 
 void fill1(){
-    char* graph1 = malloc(strlen(graph)+1);
-    strcpy(graph1,graph);
+    char* graph1 = malloc(sizeof(char)*website_count*website_count);
+    memcpy(graph1,graph,sizeof(char)*website_count*website_count);
     for(int i=0;i<website_count;i++)
     {
         if (is_connected(i,i)==0)
@@ -454,11 +435,13 @@ void fill1(){
             connect2(graph1,i,i);
         }
     }
-    plot(graph1);
+
+    convertToCSV(graph1);
+    plot("graph.csv");
 }
 void fill2(){
-    char* graph2 = malloc(strlen(graph)+1);
-    strcpy(graph2,graph);
+    char* graph2 = malloc(sizeof(char)*website_count*website_count);
+    memcpy(graph2,graph,sizeof(char)*website_count*website_count);
     for(int i=0;i<website_count;i++)
     {
         for(int j=0;j<website_count;j++)
@@ -469,9 +452,9 @@ void fill2(){
                     }
         }
     }
-    //plot(graph2);
-    //printf("SampleInput.csv");
-    //plot("SampleInput.csv");
+
+    convertToCSV(graph2);
+    plot("graph.csv");
     
 }
 void fill3(){
@@ -563,7 +546,27 @@ void menu4(){
 }
 
 void menu4op1(){
-
+    char* hasse = malloc(sizeof(char)*website_count*website_count);
+    memcpy(hasse,graph,sizeof(char)*website_count*website_count);
+    for(int i=0;i<website_count;i++)
+    {
+        for(int j=0;j<website_count;j++)
+        {
+            if (is_connected(i,j)==1)
+                    {
+                        disconnect2(hasse,i,j);
+                    }
+            for (int k=0;k<website_count;k++)
+            {
+                if ( (is_connected(i,j)==1) && (is_connected(j,k)==1) && (is_connected(i,k)==1))
+                    {
+                        disconnect2(hasse,i,k);
+                    }
+            }
+        }
+    }
+    convertToCSV(hasse);
+    plot("graph.csv");
 }
 void menu4op2(){
     for(int i=0;i<website_count;i++){
