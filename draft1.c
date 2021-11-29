@@ -86,20 +86,33 @@ void print_header(){
         printf("%s\n", websites[i]);
 }
 
-void parse_header(char* header){
-    int count=0;
-    websites = malloc(sizeof(char*)*100);
-    
-    char* website = (char*) malloc(sizeof(char)*100);
-    for(int i = 1; i<strlen(header); i++)
+bool valid_char(char c)
+{
+    return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') || c == '.' || c == '_' || c == '-';
+}
+
+void parse_header(char *header)
+{
+    int count = 0;
+    websites = malloc(sizeof(char *) * 100);
+
+    char *website = (char *)malloc(sizeof(char) * 100);
+    int header_length = strlen(header);
+    //start at 1 to skip starting comma
+    for (int i = 1; i < header_length; i++)
     {
-if (header[i]==',' || header[i]=='\n' || i == strlen(header)-1)        {
-            strncat(website, "\0", 1);
-            websites[count] = website;
-            website = (char*) malloc(sizeof(char)*100);
-            count++;
+        if (!valid_char(header[i]) || i == header_length - 1)
+        {
+            if (strlen(website) > 0)
+            {
+                strncat(website, "\0", 1);
+                websites[count] = website;
+                count++;
+            }
+            website = (char *)malloc(sizeof(char) * 100);
         }
-        else{
+        else
+        {
             strncat(website, &header[i], 1);
         }
     }
@@ -119,25 +132,54 @@ void parse_graph(FILE* fp){
     }
 }
 
-void convertToCSV(char* graph){
+void convertToCSV(bool *graph)
+{
     FILE *p;
-    p=fopen("graph.csv","w");
+    p = fopen("graph.csv", "w");
     fprintf(p,","); // first entry
-    for(int i=0;i<website_count;i++){
-        fprintf(p, "%s %d ,", websites[i],i); //headers w numbers and comma
+
+    for (int i = 0; i < website_count; i++)
+    {
+        fprintf(p, "%s", websites[i], i); //headers w numbers and comma
+        if (i != website_count - 1)
+            fprintf(p, ",");
     }
+    fprintf(p, "%c", '\n');
 
-    for(int i=0;i<website_count;i++){
-
-        fprintf(p, "%s", websites[i]);
-        fprintf(p,",");
-        for(int j=0;j<website_count;j++)
-            {
-                fprintf(p, "%d,", is_connected2(graph,i,j));       
-            } 
-            fprintf(p,"\n");
+    for (int i = 0; i < website_count; i++)
+    {
+        fprintf(p, "%s,", websites[i]);
+        for (int j = 0; j < website_count; j++)
+        {
+            fprintf(p, "%d", is_connected2(graph, i, j));
+            if (j != website_count - 1)
+                fprintf(p, ",");
         }
+        fprintf(p, "%c", '\n');
+    }
+    fclose(p);
 }
+
+// void convertToCSV(char* graph){
+//     FILE *p;
+//     p=fopen("graph.csv","w");
+//     fprintf(p,","); // first entry
+//     for(int i=0;i<website_count;i++){
+//         fprintf(p, "%s %d ,", websites[i],i); //headers w numbers and comma
+//     }
+    
+
+//     for(int i=0;i<website_count;i++){
+
+//         fprintf(p, "%s", websites[i]);
+//         fprintf(p,",");
+//         for(int j=0;j<website_count;j++)
+//             {
+//                 fprintf(p, "%d,", is_connected2(graph,i,j));       
+//             } 
+//             fprintf(p,"\n");
+//         }
+// }
 
 int main()
 {
