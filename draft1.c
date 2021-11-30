@@ -2,11 +2,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
-#include <unistd.h> 
+#include <unistd.h>
 
-char** websites;
-char* graph;
-int website_count=0;
+char **websites;
+char *graph;
+int website_count = 0;
 
 bool mainop1();
 bool mainop2();
@@ -39,54 +39,88 @@ void menu5op1();
 void menu5op2();
 void menu5op3();
 bool is_connected(int i, int j);
-bool is_connected2(char* graph, int i, int j);
+bool is_connected2(char *graph, int i, int j);
 
-void plot(char * fname){
+void plot(char *fname)
+{
     int pid;
-    if((pid = fork())==0){
-        if(execlp("python", "python","visualise.py",fname,(char*)NULL)==-1){
-        	execlp("python3", "python3","visualise.py",fname,(char*)NULL);
+    if ((pid = fork()) == 0)
+    {
+        if (execlp("python", "python", "visualise.py", fname, (char *)NULL) == -1)
+        {
+            execlp("python3", "python3", "visualise.py", fname, (char *)NULL);
         };
     }
     exit(0);
 }
 
-void connect(int i, int j){
-    graph[i*website_count+j] = true;
+void connect(int i, int j)
+{
+    graph[i * website_count + j] = true;
 }
 
-void connect2(char* graph,int i, int j){
-    graph[i*website_count+j] = true;
+void connect2(char *graph, int i, int j)
+{
+    graph[i * website_count + j] = true;
 }
 
-void disconnect2(char* graph,int i, int j){
-    graph[i*website_count+j] = false;
+void disconnect2(char *graph, int i, int j)
+{
+    graph[i * website_count + j] = false;
 }
 
-bool is_connected(int i, int j){
-    return graph[i*website_count+j];
+bool is_connected(int i, int j)
+{
+    return graph[i * website_count + j];
 }
 
-bool is_connected2(char* graph, int i, int j){
-    return graph[i*website_count+j];
+bool is_connected2(char *graph, int i, int j)
+{
+    return graph[i * website_count + j];
 }
 
-bool path(){
-    //check if a path exists
+bool* visited=NULL;
+
+bool path(int node1,int node2)
+{
+    if (visited=NULL){
+        bool* visited = (bool*)malloc(sizeof(bool)*website_count);
+    }
+    
+    //if(is_connected(node1,node2))
+    if(node1==node2)
+        return true;
+
+    for (int x=0;x<website_count;x++){
+        if(visited[x]=1)
+            continue;
+        else if(visited[x]==0)
+        {
+            visited[x]=true;
+            if( is_connected(node1,x) && path(x,node2) )
+                return true;
+        }
+    }
+
+    return false;
 }
 
-void print_graph(){
-    for (int i = 0; i < website_count; i++) {
-        for (int j = 0; j < website_count; j++) {
-            printf("%d ", is_connected(i,j));
+void print_graph()
+{
+    for (int i = 0; i < website_count; i++)
+    {
+        for (int j = 0; j < website_count; j++)
+        {
+            printf("%d ", is_connected(i, j));
         }
         printf("\n");
     }
 }
 
-void print_header(){
+void print_header()
+{
     printf("%d\n", website_count);
-    for(int i = 0; i< website_count; i++)
+    for (int i = 0; i < website_count; i++)
         printf("%s\n", websites[i]);
 }
 
@@ -123,14 +157,18 @@ void parse_header(char *header)
     website_count = count;
 }
 
-void parse_graph(FILE* fp){
-    graph = calloc(sizeof(bool)*website_count, website_count);
-    for(int row = 0; row<website_count; row++){
-        while(getc(fp)!=',') ; 
-        for (int col = 0; col < website_count; col++) {
-            if(getc(fp)=='1')
-                connect(row,col);
-            if(col!=website_count-1) 
+void parse_graph(FILE *fp)
+{
+    graph = calloc(sizeof(bool) * website_count, website_count);
+    for (int row = 0; row < website_count; row++)
+    {
+        while (getc(fp) != ',')
+            ;
+        for (int col = 0; col < website_count; col++)
+        {
+            if (getc(fp) == '1')
+                connect(row, col);
+            if (col != website_count - 1)
                 getc(fp);
         }
     }
@@ -140,11 +178,11 @@ void convertToCSV(bool *graph)
 {
     FILE *p;
     p = fopen("graph.csv", "w");
-    fprintf(p,","); 
+    fprintf(p, ",");
 
     for (int i = 0; i < website_count; i++)
     {
-        fprintf(p, "%s", websites[i], i); 
+        fprintf(p, "%s", websites[i], i);
         if (i != website_count - 1)
             fprintf(p, ",");
     }
@@ -170,12 +208,19 @@ int main()
     char header[1000];
     fgets(header, sizeof(header), fp);
     parse_header(header);
-    print_header();
-    parse_graph(fp);
-    print_graph();
-    mainMenu();
-    return 0;  
-}   
+    //print_header();
+    //parse_graph(fp);
+    //print_graph();
+    //mainMenu();
+
+     if (path(1,2)){
+         printf("PATH EXISTS");
+     }
+     else {
+         printf("nope");
+     }
+    return 0;
+}
 
 void mainMenu()
 {
@@ -296,10 +341,11 @@ void mainMenu()
     }
 }
 
-bool mainop1(){
-    for(int i=0;i<website_count;i++)
+bool mainop1()
+{
+    for (int i = 0; i < website_count; i++)
     {
-        if (is_connected(i,i)==0)
+        if (is_connected(i, i) == 0)
         {
             return false;
         }
@@ -309,80 +355,103 @@ bool mainop1(){
         }
     }
 }
-bool mainop2(){
-    for(int i=0;i<website_count;i++){
-        for(int j=0;j<website_count;j++){
-            if ((is_connected(i,j)==1) && (is_connected(j,i)==1))
+bool mainop2()
+{
+    for (int i = 0; i < website_count; i++)
+    {
+        for (int j = 0; j < website_count; j++)
+        {
+            if ((is_connected(i, j) == 1) && (is_connected(j, i) == 1))
             {
                 return true;
             }
         }
     }
 }
-bool mainop3(){
-    for(int i=0;i<website_count;i++){
-        for(int j=0;j<website_count;j++){
-            if (is_connected(i,j)==0)
+bool mainop3()
+{
+    for (int i = 0; i < website_count; i++)
+    {
+        for (int j = 0; j < website_count; j++)
+        {
+            if (is_connected(i, j) == 0)
             {
                 return false;
-            }   
+            }
         }
     }
 }
-bool mainop4(){
+bool mainop4()
+{
     //for any i??
-for(int i=0;i<website_count;i++){
-    if (is_connected(i,i)==1)
+    for (int i = 0; i < website_count; i++)
+    {
+        if (is_connected(i, i) == 1)
         {
             return true;
-        }   
-    }  
+        }
+    }
 }
-bool mainop5(){
-    for(int i=0;i<website_count;i++){
-        for(int j=0;j<website_count;j++){
-            if ((is_connected(i,j)==1) && (is_connected(j,i)==0))
+bool mainop5()
+{
+    for (int i = 0; i < website_count; i++)
+    {
+        for (int j = 0; j < website_count; j++)
+        {
+            if ((is_connected(i, j) == 1) && (is_connected(j, i) == 0))
             {
                 return true;
             }
         }
     }
 }
-bool mainop6(){
-    for(int i=0;i<website_count;i++){
-        for(int j=0;j<website_count;j++){
-            if ((is_connected(i,j)==1) && (is_connected(j,i)==0) && (i!=j))
+bool mainop6()
+{
+    for (int i = 0; i < website_count; i++)
+    {
+        for (int j = 0; j < website_count; j++)
+        {
+            if ((is_connected(i, j) == 1) && (is_connected(j, i) == 0) && (i != j))
             {
                 return true;
             }
         }
     }
 }
-bool mainop7(){
+bool mainop7()
+{
     //do some study
 }
-bool mainop8(){
-    if(mainop1()&&checkAntiSymm()&&checkTransitive())
+bool mainop8()
+{
+    if (mainop1() && checkAntiSymm() && checkTransitive())
     {
         return true;
     }
 }
-bool checkTransitive(){
-    for(int i=0;i<website_count;i++){
-        for(int j=0;j<website_count;j++){
-            for( int k=0;k<website_count;k++){
-                if ((is_connected(i,j)) && (is_connected(j,k)) && (is_connected(i,k)))
+bool checkTransitive()
+{
+    for (int i = 0; i < website_count; i++)
+    {
+        for (int j = 0; j < website_count; j++)
+        {
+            for (int k = 0; k < website_count; k++)
             {
+                if ((is_connected(i, j)) && (is_connected(j, k)) && (is_connected(i, k)))
+                {
                     return true;
+                }
             }
-            } 
         }
     }
 }
-bool checkAntiSymm(){
-    for(int i=0;i<website_count;i++){
-        for(int j=0;j<website_count;j++){
-            if ((is_connected(i,j)==1) && (is_connected(j,i)==0))
+bool checkAntiSymm()
+{
+    for (int i = 0; i < website_count; i++)
+    {
+        for (int j = 0; j < website_count; j++)
+        {
+            if ((is_connected(i, j) == 1) && (is_connected(j, i) == 0))
             {
                 return true;
             }
@@ -390,100 +459,105 @@ bool checkAntiSymm(){
     }
 }
 
-void menu2(int n){
+void menu2(int n)
+{
     printf("Menu 2\n");
     printf("Do you want to visualize how the network will look if we add the minimum links to satisfy the property?\n");
     char response[100];
     scanf("%s", response);
-    
+
     //char correct[]="yes";
     //int k = strncmp(response,correct,3);
-    
-    int k=0;
-    if(k==0){
-        switch(n)
+
+    int k = 0;
+    if (k == 0)
+    {
+        switch (n)
         {
-            case 1:
-                fill1();
-                break;
-            case 2:
-                fill2();
-                break;
-            case 3:
-                // printf("in switch");
-                fill3();
-                break;
-            case 7:
-                fill7();
-                break;
+        case 1:
+            fill1();
+            break;
+        case 2:
+            fill2();
+            break;
+        case 3:
+            // printf("in switch");
+            fill3();
+            break;
+        case 7:
+            fill7();
+            break;
         }
     }
-    else{
+    else
+    {
         printf("\n");
         mainMenu();
     }
-
 }
 
-void fill1(){
-    char* graph1 = malloc(sizeof(char)*website_count*website_count);
-    memcpy(graph1,graph,sizeof(char)*website_count*website_count);
-    for(int i=0;i<website_count;i++)
+void fill1()
+{
+    char *graph1 = malloc(sizeof(char) * website_count * website_count);
+    memcpy(graph1, graph, sizeof(char) * website_count * website_count);
+    for (int i = 0; i < website_count; i++)
     {
-        if (is_connected(i,i)==0)
+        if (is_connected(i, i) == 0)
         {
-            connect2(graph1,i,i);
+            connect2(graph1, i, i);
         }
     }
 
     convertToCSV(graph1);
     plot("graph.csv");
 }
-void fill2(){
-    char* graph2 = malloc(sizeof(char)*website_count*website_count);
-    memcpy(graph2,graph,sizeof(char)*website_count*website_count);
-    for(int i=0;i<website_count;i++)
+void fill2()
+{
+    char *graph2 = malloc(sizeof(char) * website_count * website_count);
+    memcpy(graph2, graph, sizeof(char) * website_count * website_count);
+    for (int i = 0; i < website_count; i++)
     {
-        for(int j=0;j<website_count;j++)
+        for (int j = 0; j < website_count; j++)
         {
-            if (is_connected(i,j)==1)
-                    {
-                        connect2(graph2,j,i);
-                    }
+            if (is_connected(i, j) == 1)
+            {
+                connect2(graph2, j, i);
+            }
         }
     }
 
     convertToCSV(graph2);
     plot("graph.csv");
-    
 }
-void fill3(){
-    char* graph3 = malloc(sizeof(char)*website_count*website_count);
-    memcpy(graph3,graph,sizeof(char)*website_count*website_count);
-    for(int i=0;i<website_count;i++)
+void fill3()
+{
+    char *graph3 = malloc(sizeof(char) * website_count * website_count);
+    memcpy(graph3, graph, sizeof(char) * website_count * website_count);
+    for (int i = 0; i < website_count; i++)
     {
-        for(int j=0;j<website_count;j++)
+        for (int j = 0; j < website_count; j++)
         {
-            if (is_connected(i,j)==0)
-                    {
-                        connect2(graph3,i,j);
-                    }
+            if (is_connected(i, j) == 0)
+            {
+                connect2(graph3, i, j);
+            }
         }
     }
     convertToCSV(graph3);
     plot("graph.csv");
 }
-void fill7(){
-    
+void fill7()
+{
 }
 
-void menu3(){
+void menu3()
+{
     printf("Menu 3\n");
     printf("Do you want to know the nodes in each piece?\n\n");
     char response[5];
     scanf("%s", response);
 
-    if (strcmp(response,"Yes") == 0)
+    if (strcmp(response, "Yes") == 0)
     {
         //find nodes,print
     }
@@ -493,7 +567,8 @@ void menu3(){
     }
 }
 
-void menu4(){
+void menu4()
+{
     printf("Menu 4\n");
     printf("1. Display the hasse diagram\n");
     printf("2. Display the website whose link is available in every website\n");
@@ -515,7 +590,7 @@ void menu4(){
         break;
     case 2:
         if (mainop2())
-        menu4op2();
+            menu4op2();
         break;
     case 3:
         menu4op3();
@@ -527,10 +602,10 @@ void menu4(){
         menu4op5();
         break;
     case 6:
-        
+
         break;
     case 7:
-        
+
         break;
     case 8:
         //if(checkLattice())
@@ -545,134 +620,167 @@ void menu4(){
     printf("\n");
 }
 
-void menu4op1(){
-    char* hasse = malloc(sizeof(char)*website_count*website_count);
-    memcpy(hasse,graph,sizeof(char)*website_count*website_count);
-    for(int i=0;i<website_count;i++)
+void menu4op1()
+{
+    char *hasse = malloc(sizeof(char) * website_count * website_count);
+    memcpy(hasse, graph, sizeof(char) * website_count * website_count);
+    for (int i = 0; i < website_count; i++)
     {
-        for(int j=0;j<website_count;j++)
+        for (int j = 0; j < website_count; j++)
         {
-            if (is_connected(i,j)==1)
-                    {
-                        disconnect2(hasse,i,j);
-                    }
-            for (int k=0;k<website_count;k++)
+            if (is_connected(i, j) == 1)
             {
-                if ( (is_connected(i,j)==1) && (is_connected(j,k)==1) && (is_connected(i,k)==1))
-                    {
-                        disconnect2(hasse,i,k);
-                    }
+                disconnect2(hasse, i, j);
+            }
+            for (int k = 0; k < website_count; k++)
+            {
+                if ((is_connected(i, j) == 1) && (is_connected(j, k) == 1) && (is_connected(i, k) == 1))
+                {
+                    disconnect2(hasse, i, k);
+                }
             }
         }
     }
     convertToCSV(hasse);
     plot("graph.csv");
 }
-void menu4op2(){
-    for(int i=0;i<website_count;i++){
-        for( int j=0;j<website_count;j++){
-            if(is_connected(i,j)){
+void menu4op2()
+{
+    for (int i = 0; i < website_count; i++)
+    {
+        for (int j = 0; j < website_count; j++)
+        {
+            if (is_connected(i, j))
+            {
                 printf(websites[i]);
             }
         }
     }
 }
-void menu4op3(){
-    for(int i=0;i<website_count;i++){
-        for( int j=0;j<website_count;j++){
+void menu4op3()
+{
+    for (int i = 0; i < website_count; i++)
+    {
+        for (int j = 0; j < website_count; j++)
+        {
             printf(websites[j]);
         }
     }
 }
-void menu4op4(){
-    for(int i=0;i<website_count;i++){
-        for(int j=0;j<website_count;j++){
-            if( (is_connected(i,i)==1) && (is_connected(i,j)==0) ){
+void menu4op4()
+{
+    for (int i = 0; i < website_count; i++)
+    {
+        for (int j = 0; j < website_count; j++)
+        {
+            if ((is_connected(i, i) == 1) && (is_connected(i, j) == 0))
+            {
                 printf(websites[i]);
             }
         }
     }
 }
-void menu4op5(){
-    for(int i=0;i<website_count;i++){
-        for(int j=0;j<website_count;j++){
-            if( (is_connected(i,i)==1) && (is_connected(j,i)==0) ){
+void menu4op5()
+{
+    for (int i = 0; i < website_count; i++)
+    {
+        for (int j = 0; j < website_count; j++)
+        {
+            if ((is_connected(i, i) == 1) && (is_connected(j, i) == 0))
+            {
                 printf(websites[i]);
             }
         }
     }
 }
-void menu4op6(){
+void menu4op6()
+{
     char inputs[100];
-    scanf("Type the names of the websites(space separated)%[^\n]",inputs);
-    char delim[]=" ";
+    scanf("Type the names of the websites(space separated)%[^\n]", inputs);
+    char delim[] = " ";
     char *ptr = strtok(inputs, delim);
-    while(ptr != NULL)
-	{
-		printf("'%s'\n", ptr);
-		ptr = strtok(NULL, delim);
-	}
+    while (ptr != NULL)
+    {
+        printf("'%s'\n", ptr);
+        ptr = strtok(NULL, delim);
+    }
     int inputIndex[100];
-    int count=strlen(inputs);
+    int count = strlen(inputs);
 
-    for(int i=0;i<count;i++){
-        for(int j=0;j<website_count;j++){
-            if(strcmp(websites[j],inputs[i])){
-            inputIndex[i]=j;
-        }
-        else{
-            //deal with this somehow?
-        }
+    for (int i = 0; i < count; i++)
+    {
+        for (int j = 0; j < website_count; j++)
+        {
+            if (strcmp(websites[j], inputs[i]))
+            {
+                inputIndex[i] = j;
+            }
+            else
+            {
+                //deal with this somehow?
+            }
         }
     }
 
-    for(int x=0;x<website_count;x++){
-        for(int i=0;i<count;i++){
-            if (is_connected(inputIndex[i],x)==0){
+    for (int x = 0; x < website_count; x++)
+    {
+        for (int i = 0; i < count; i++)
+        {
+            if (is_connected(inputIndex[i], x) == 0)
+            {
                 printf(websites[x]);
                 //this doesnt make logical sense
             }
         }
     }
 }
-void menu4op7(){
+void menu4op7()
+{
     char inputs[100];
-    scanf("Type the names of the websites(space separated)%[^\n]",inputs);
-    char delim[]=" ";
+    scanf("Type the names of the websites(space separated)%[^\n]", inputs);
+    char delim[] = " ";
     char *ptr = strtok(inputs, delim);
-    while(ptr != NULL)
-	{
-		printf("'%s'\n", ptr);
-		ptr = strtok(NULL, delim);
-	}
+    while (ptr != NULL)
+    {
+        printf("'%s'\n", ptr);
+        ptr = strtok(NULL, delim);
+    }
     int inputIndex[100];
-    int count=strlen(inputs);
+    int count = strlen(inputs);
 
-    for(int i=0;i<count;i++){
-        for(int j=0;j<website_count;j++){
-            if(strcmp(websites[j],inputs[i])){
-            inputIndex[i]=j;
-        }
-        else{
-            //deal with this somehow?
-        }
+    for (int i = 0; i < count; i++)
+    {
+        for (int j = 0; j < website_count; j++)
+        {
+            if (strcmp(websites[j], inputs[i]))
+            {
+                inputIndex[i] = j;
+            }
+            else
+            {
+                //deal with this somehow?
+            }
         }
     }
 
-    for(int x=0;x<website_count;x++){
-        for(int i=0;i<count;i++){
-            if (is_connected(x,inputIndex[i])==0){
+    for (int x = 0; x < website_count; x++)
+    {
+        for (int i = 0; i < count; i++)
+        {
+            if (is_connected(x, inputIndex[i]) == 0)
+            {
                 printf(websites[x]);
                 //this doesnt make logical sense
             }
         }
     }
 }
-void checkLattice(){
-    
+void checkLattice()
+{
 }
 
-void menu5(){
+void menu5()
+{
     printf("Menu 5\n");
     printf("1. Given 2 websites A and B, display the website which is reachable by both A and B and can also reach to all such websites that both A and B can reach\n");
     printf("2. Given 2 websites A and B, display the website that can reach both A and B and is also reachable from all such websites that can reach to both A and B\n");
@@ -699,96 +807,108 @@ void menu5(){
     }
 }
 
-void menu5op1(){
+void menu5op1()
+{
     char A[100];
     int AIndex;
     int BIndex;
     scanf("Type the first website %s", A);
-    
-    for(int i=0;i<website_count;i++){
-        if(strcmp(websites[i],A)){
-            AIndex=i;
+
+    for (int i = 0; i < website_count; i++)
+    {
+        if (strcmp(websites[i], A))
+        {
+            AIndex = i;
         }
-        else{
-            //deal with this somehow?
+        else
+        {
+            printf("Invalid website name ");
+            menu5op1();
         }
     }
 
     char B[100];
     scanf("Type the second website %s", B);
-    
-    for(int i=0;i<website_count;i++){
-        if(strcmp(websites[i],B)){
-            BIndex=i;
+
+    for (int i = 0; i < website_count; i++)
+    {
+        if (strcmp(websites[i], B))
+        {
+            BIndex = i;
         }
-        else{
-            //deal with this somehow?
+        else
+        {
+            printf("Invalid website name ");
+            menu5op1();
         }
     }
-    
 
-    for(int x=0;x<website_count;x++){
-        if( (is_connected(AIndex,x)) && (is_connected(BIndex,x))){
-            for(int y=0;y<website_count;y++){
-                if ( (is_connected(AIndex,y)) && (is_connected(BIndex,y)) && (is_connected(x,y))){
-                    printf(websites[x]);
+    for (int x = 0; x < website_count; x++)
+    {
+        if ((is_connected(AIndex, x)) && (is_connected(BIndex, x)))
+        {
+            for (int y = 0; y < website_count; y++)
+            {
+                if ((path(AIndex, y)) && (path(BIndex, y)) && (path(x, y)))
+                {
+                    printf("%s ", websites[x]);
                 }
             }
         }
     }
-    // is the connected function correct - if not replace with a new path function 
 }
-void menu5op2(){
+
+void menu5op2()
+{
 
     char A[100];
     int AIndex;
     int BIndex;
     scanf("Type the first website %s", A);
-    
-    for(int i=0;i<website_count;i++){
-        if(strcmp(websites[i],A)){
-            AIndex=i;
+
+    for (int i = 0; i < website_count; i++)
+    {
+        if (strcmp(websites[i], A))
+        {
+            AIndex = i;
         }
-        else{
-            //deal with this somehow?
-            //printf("Invalid Website");
-            //menu5op2();
+        else
+        {
+            printf("Invalid Website");
+            menu5op2();
         }
     }
 
     char B[100];
     scanf("Type the second website %s", B);
-    
-    for(int i=0;i<website_count;i++){
-        if(strcmp(websites[i],B)){
-            BIndex=i;
+
+    for (int i = 0; i < website_count; i++)
+    {
+        if (strcmp(websites[i], B))
+        {
+            BIndex = i;
         }
-        else{
-            //deal with this somehow?
-            //printf("Invalid Website");
-            //menu5op2();
+        else
+        {
+            printf("Invalid Website");
+            menu5op2();
         }
     }
-    
 
-    for(int x=0;x<website_count;x++){
-        if( (is_connected(x,AIndex)) && (is_connected(x,BIndex))){
-            for(int y=0;y<website_count;y++){
-                if ( (is_connected(y,AIndex)) && (is_connected(y,BIndex)) && (is_connected(y,x))){
-                    printf(websites[x]);
+    for (int x = 0; x < website_count; x++)
+    {
+        if ((path(x, AIndex)) && (path(x, BIndex)))
+        {
+            for (int y = 0; y < website_count; y++)
+            {
+                if ((path(y, AIndex)) && (path(y, BIndex)) && (path(y, x)))
+                {
+                    printf("%s",websites[x]);
                 }
             }
         }
     }
-    //take 2 ips-a and b
-    //give the ips a number
-    //find an website[x]
-    //where () is either is_connected or a new path function??
-    //st (x,a) and (x,b) 
-    // and if (y,a) and (y,b) then (y,x)
-    //print website[x]
 }
-void menu5op3(){
-    
-
+void menu5op3()
+{
 }
