@@ -9,10 +9,6 @@ bool *graph;
 int website_count = 0;
 bool *visited = NULL;
 
-#define MAX 10
-
-int count = 0;
-
 bool mainop1();
 bool mainop2();
 bool mainop3();
@@ -49,63 +45,51 @@ int checkLUB(int i, int j);
 int checkGLB(int i, int j);
 int LUB(int i, int j);
 int GLB(int i, int j);
+void dfs1(int node);
+void dfs2(int node);
 
-struct stack {
-  int items[MAX];
-  int top;
-};
-typedef struct stack st;
+typedef struct
+{
+    int *data;
+    struct Node *next;
+} Node;
 
-void createEmptyStack(st *s) {
-  s->top = -1;
+typedef struct
+{
+    Node *head;
+    int size;
+} Stack;
+
+Node *newNode(int data, Node *next)
+{
+    Node *node = (Node *)malloc(sizeof(Node));
+    node->data = data;
+    node->next = next;
+    return node;
 }
 
-int isfull(st *s) {
-  if (s->top == MAX - 1)
-    return 1;
-  else
-    return 0;
+int pop(Stack *stack)
+{
+    if (stack->size == 0)
+    {
+        printf("Stack is empty\n");
+        return -1;
+    }
+    Node *temp = stack->head;
+    stack->head = stack->head->next;
+    stack->size--;
+    int data = temp->data;
+    free(temp);
+    return data;
 }
 
-int isempty(st *s) {
-  if (s->top == -1)
-    return 1;
-  else
-    return 0;
+Stack *push(Stack *stack, int value)
+{
+    Node *node = newNode(value, stack->head);
+    stack->head = node;
+    stack->size++;
+    return stack;
 }
-
-void push(st *s, int newitem) {
-  if (isfull(s)) {
-    printf("STACK FULL");
-  } else {
-    s->top++;
-    s->items[s->top] = newitem;
-  }
-  count++;
-}
-
-void pop(st *s) {
-  if (isempty(s)) {
-    printf("\n STACK EMPTY \n");
-  } else {
-    printf("Item popped= %d", s->items[s->top]);
-    s->top--;
-  }
-  count--;
-  printf("\n");
-}
-
-void printStack(st *s) {
-  printf("Stack: ");
-  for (int i = 0; i < count; i++) {
-    printf("%d ", s->items[i]);
-  }
-  printf("\n");
-}
-
-
-createEmptyStack(st *stk);
-createEmptyStack(st *component_nodes);
 
 
 void plot(char *fname)
@@ -160,7 +144,7 @@ bool path(int node1, int node2)
             continue;
 
         visited[x] = true;
-        if (path(node1, x) && path(x, node2))
+        if (is_connected(node1, x) && path(x, node2))
             return true;
     }
 
@@ -480,10 +464,17 @@ bool mainop6()
     }
     return false;
 }
-bool mainop7()
-{
-    //do some study
-}
+// bool mainop7()
+// {
+//     //do some study
+// }
+
+Stack stack;
+bool *visited;
+
+int *component;
+Stack *componentNodes;
+int numComponents;
 
 void dfs1(int node)
 {
@@ -493,50 +484,73 @@ void dfs1(int node)
         if (visited[x] == true)
             continue;
 
-        if(is_connected(node, x))
+        if (is_connected(node, x))
         {
             dfs1(x);
         }
     }
-    push(stk,node);
-    
+    push(&stack, node);
 }
-
 
 void dfs2(int node)
 {
+    printf("%s",websites[node]);
     component[node] = numComponents;
-    push(component_nodes,node);
+    push(&componentNodes[node], node);
     visited[node] = true;
     for (int x = 0; x < website_count; x++)
     {
         if (visited[x] == true)
             continue;
 
-        if(is_connected(x, node))
+        if (is_connected(x, node))
         {
             dfs2(x);
         }
     }
-    push(stk,node);
+    push(&stack, node);
 }
 
-Kosaraju(){
-    for(int i=0;i<website_count;i++){
-        if(!visited[i])
-            dfs1(i);
-    }
-    for(int i=0;i<website_count;i++){
-        visited[i]=false;
-    }
-    while(!isempty(stk)){
-        int v = pop(stk);
-        i(!visited[v]){
-            dsf2(v);
+bool mainop7(){
+    fill7();
+    for( int i=0;i<website_count;i++){
+        if(visited[i]==0){
+            return false;
         }
     }
 }
 
+void fill7()
+{
+    
+    visited = (bool *)calloc(sizeof(bool), website_count);
+    componentNodes = calloc(sizeof(Stack), website_count);
+    component = calloc(sizeof(int), website_count);
+
+    for(int i=0;i<website_count;i++){
+        component[i]=-1;
+    }
+
+    for (int i = 0; i < website_count; i++)
+        if (!visited[i])
+            dfs_1(i);
+
+    for (int i = 0; i < website_count; i++)
+        visited[i] = false;
+
+    while (stack.size > 0)
+    {
+        int v = pop(&stack);
+        if (!visited[v])
+        {
+            printf("Component %d: ", numComponents);
+            dfs_2(v);
+            numComponents++;
+            printf("\n");
+        }
+    }
+    
+}
 
 bool mainop8()
 {
@@ -662,9 +676,9 @@ void fill3()
     convertToCSV(graph3);
     plot("graph.csv");
 }
-void fill7()
-{
-}
+// void fill7()
+// {
+// }
 
 void menu3()
 {
@@ -1119,3 +1133,7 @@ int GLB(int i, int j)
         }
     }
 }
+
+
+
+
