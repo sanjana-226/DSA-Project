@@ -7,6 +7,7 @@
 char **websites;
 char *graph;
 int website_count = 0;
+bool* visited=NULL;
 
 bool mainop1();
 bool mainop2();
@@ -33,13 +34,15 @@ void menu4op4();
 void menu4op5();
 void menu4op6();
 void menu4op7();
-void checkLattice();
+bool checkLattice();
 void menu5();
 void menu5op1();
 void menu5op2();
 void menu5op3();
 bool is_connected(int i, int j);
 bool is_connected2(char *graph, int i, int j);
+bool checkLUB(int i,int j);
+bool checkGLB(int i,int j);
 
 void plot(char *fname)
 {
@@ -79,32 +82,31 @@ bool is_connected2(char *graph, int i, int j)
     return graph[i * website_count + j];
 }
 
-bool* visited=NULL;
-
-bool path(int node1,int node2)
+bool path(int node1, int node2)
 {
-    if (visited=NULL){
-        bool* visited = (bool*)malloc(sizeof(bool)*website_count);
-    }
-    
-    //if(is_connected(node1,node2))
-    if(node1==node2)
+    if (visited == NULL)
+        visited = (bool*) malloc(sizeof(bool) * website_count);
+
+    if (is_connected(node1, node2))
         return true;
 
-    for (int x=0;x<website_count;x++){
-        if(visited[x]=1)
+    for (int x = 0; x < website_count; x++)
+    {
+        if (visited[x] == true)
             continue;
-        else if(visited[x]==0)
-        {
-            visited[x]=true;
-            if( is_connected(node1,x) && path(x,node2) )
-                return true;
-        }
+        
+        visited[x] = true;
+        if (is_connected(node1, x) && path(x, node2))
+            return true;
     }
 
     return false;
 }
 
+bool path2(int node1,int node2){
+    bool* visited=NULL;
+    path(node1,node2);
+}
 void print_graph()
 {
     for (int i = 0; i < website_count; i++)
@@ -208,17 +210,10 @@ int main()
     char header[1000];
     fgets(header, sizeof(header), fp);
     parse_header(header);
-    //print_header();
-    //parse_graph(fp);
-    //print_graph();
-    //mainMenu();
-
-     if (path(1,2)){
-         printf("PATH EXISTS");
-     }
-     else {
-         printf("nope");
-     }
+    print_header();
+    parse_graph(fp);
+    print_graph();
+    mainMenu();
     return 0;
 }
 
@@ -349,11 +344,8 @@ bool mainop1()
         {
             return false;
         }
-        else
-        {
-            return true;
-        }
     }
+    return true;
 }
 bool mainop2()
 {
@@ -367,6 +359,7 @@ bool mainop2()
             }
         }
     }
+    return false;
 }
 bool mainop3()
 {
@@ -380,10 +373,10 @@ bool mainop3()
             }
         }
     }
+    return true;
 }
 bool mainop4()
 {
-    //for any i??
     for (int i = 0; i < website_count; i++)
     {
         if (is_connected(i, i) == 1)
@@ -391,6 +384,7 @@ bool mainop4()
             return true;
         }
     }
+    return false;
 }
 bool mainop5()
 {
@@ -404,6 +398,7 @@ bool mainop5()
             }
         }
     }
+    return false;
 }
 bool mainop6()
 {
@@ -417,6 +412,7 @@ bool mainop6()
             }
         }
     }
+    return false;
 }
 bool mainop7()
 {
@@ -428,6 +424,7 @@ bool mainop8()
     {
         return true;
     }
+    return false;
 }
 bool checkTransitive()
 {
@@ -608,11 +605,11 @@ void menu4()
 
         break;
     case 8:
-        //if(checkLattice())
-        //{
-        //    menu5();
-        //}
-        //break;
+        if(checkLattice())
+        {
+           menu5();
+        }
+        break;
     case 9:
         mainMenu();
         break;
@@ -652,7 +649,7 @@ void menu4op2()
         {
             if (is_connected(i, j))
             {
-                printf(websites[i]);
+                printf("%s",websites[i]);
             }
         }
     }
@@ -663,7 +660,7 @@ void menu4op3()
     {
         for (int j = 0; j < website_count; j++)
         {
-            printf(websites[j]);
+            printf("%s",websites[j]);
         }
     }
 }
@@ -675,7 +672,7 @@ void menu4op4()
         {
             if ((is_connected(i, i) == 1) && (is_connected(i, j) == 0))
             {
-                printf(websites[i]);
+                printf("%s",websites[i]);
             }
         }
     }
@@ -688,7 +685,7 @@ void menu4op5()
         {
             if ((is_connected(i, i) == 1) && (is_connected(j, i) == 0))
             {
-                printf(websites[i]);
+                printf("%s",websites[i]);
             }
         }
     }
@@ -728,7 +725,7 @@ void menu4op6()
         {
             if (is_connected(inputIndex[i], x) == 0)
             {
-                printf(websites[x]);
+                printf("%s",websites[x]);
                 //this doesnt make logical sense
             }
         }
@@ -769,14 +766,43 @@ void menu4op7()
         {
             if (is_connected(x, inputIndex[i]) == 0)
             {
-                printf(websites[x]);
+                printf("%s",websites[x]);
                 //this doesnt make logical sense
             }
         }
     }
 }
-void checkLattice()
+bool checkLattice()
 {
+    for(int i=0;i<website_count;i++){
+        for( int j=0;j<website_count;j++){
+                
+                if( checkLUB(i,j) && checkGLB(i,j))
+                    return true;
+        }
+    }
+}
+bool checkLUB(int i,int j){
+    for(int i=0;i<website_count;i++){
+        for( int j=0;j<website_count;j++){
+            for(int x=0;x<website_count;x++)
+            {
+                if(path2(x,i) && path2(x,j))
+                    return true;
+            }
+        }
+    }
+}
+bool checkGLB(int i,int j){
+    for(int i=0;i<website_count;i++){
+        for( int j=0;j<website_count;j++){
+            for(int y=0;y<website_count;y++)
+            {
+                if(path2(i,y) && path2(j,y))
+                    return true;
+            }
+        }
+    }
 }
 
 void menu5()
@@ -857,7 +883,6 @@ void menu5op1()
         }
     }
 }
-
 void menu5op2()
 {
 
