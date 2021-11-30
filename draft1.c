@@ -536,7 +536,7 @@ void fill7()
 
     for (int i = 0; i < website_count; i++)
         if (!visited[i])
-            dfs_1(i);
+            dfs1(i);
 
     for (int i = 0; i < website_count; i++)
         visited[i] = false;
@@ -547,7 +547,7 @@ void fill7()
         if (!visited[v])
         {
             printf("Component %d: ", numComponents);
-            dfs_2(v);
+            dfs2(v);
             numComponents++;
             printf("\n");
         }
