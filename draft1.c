@@ -91,7 +91,6 @@ Stack *push(Stack *stack, int value)
     return stack;
 }
 
-
 void plot(char *fname)
 {
     int pid;
@@ -494,7 +493,7 @@ void dfs1(int node)
 
 void dfs2(int node)
 {
-    printf("%s",websites[node]);
+    printf("%s", websites[node]);
     component[node] = numComponents;
     push(&componentNodes[node], node);
     visited[node] = true;
@@ -511,10 +510,13 @@ void dfs2(int node)
     push(&stack, node);
 }
 
-bool mainop7(){
+bool mainop7()
+{
     fill7();
-    for( int i=0;i<website_count;i++){
-        if(visited[i]==0){
+    for (int i = 0; i < website_count; i++)
+    {
+        if (visited[i] == 0)
+        {
             return false;
         }
     }
@@ -522,13 +524,14 @@ bool mainop7(){
 
 void fill7()
 {
-    
+
     visited = (bool *)calloc(sizeof(bool), website_count);
     componentNodes = calloc(sizeof(Stack), website_count);
     component = calloc(sizeof(int), website_count);
 
-    for(int i=0;i<website_count;i++){
-        component[i]=-1;
+    for (int i = 0; i < website_count; i++)
+    {
+        component[i] = -1;
     }
 
     for (int i = 0; i < website_count; i++)
@@ -549,7 +552,6 @@ void fill7()
             printf("\n");
         }
     }
-    
 }
 
 bool mainop8()
@@ -1133,7 +1135,3 @@ int GLB(int i, int j)
         }
     }
 }
-
-
-
-
