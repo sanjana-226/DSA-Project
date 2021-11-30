@@ -9,6 +9,10 @@ bool *graph;
 int website_count = 0;
 bool *visited = NULL;
 
+#define MAX 10
+
+int count = 0;
+
 bool mainop1();
 bool mainop2();
 bool mainop3();
@@ -45,6 +49,64 @@ int checkLUB(int i, int j);
 int checkGLB(int i, int j);
 int LUB(int i, int j);
 int GLB(int i, int j);
+
+struct stack {
+  int items[MAX];
+  int top;
+};
+typedef struct stack st;
+
+void createEmptyStack(st *s) {
+  s->top = -1;
+}
+
+int isfull(st *s) {
+  if (s->top == MAX - 1)
+    return 1;
+  else
+    return 0;
+}
+
+int isempty(st *s) {
+  if (s->top == -1)
+    return 1;
+  else
+    return 0;
+}
+
+void push(st *s, int newitem) {
+  if (isfull(s)) {
+    printf("STACK FULL");
+  } else {
+    s->top++;
+    s->items[s->top] = newitem;
+  }
+  count++;
+}
+
+void pop(st *s) {
+  if (isempty(s)) {
+    printf("\n STACK EMPTY \n");
+  } else {
+    printf("Item popped= %d", s->items[s->top]);
+    s->top--;
+  }
+  count--;
+  printf("\n");
+}
+
+void printStack(st *s) {
+  printf("Stack: ");
+  for (int i = 0; i < count; i++) {
+    printf("%d ", s->items[i]);
+  }
+  printf("\n");
+}
+
+
+createEmptyStack(st *stk);
+createEmptyStack(st *component_nodes);
+
 
 void plot(char *fname)
 {
@@ -98,7 +160,7 @@ bool path(int node1, int node2)
             continue;
 
         visited[x] = true;
-        if (is_connected(node1, x) && path(x, node2))
+        if (path(node1, x) && path(x, node2))
             return true;
     }
 
@@ -422,6 +484,60 @@ bool mainop7()
 {
     //do some study
 }
+
+void dfs1(int node)
+{
+    visited[node] = true;
+    for (int x = 0; x < website_count; x++)
+    {
+        if (visited[x] == true)
+            continue;
+
+        if(is_connected(node, x))
+        {
+            dfs1(x);
+        }
+    }
+    push(stk,node);
+    
+}
+
+
+void dfs2(int node)
+{
+    component[node] = numComponents;
+    push(component_nodes,node);
+    visited[node] = true;
+    for (int x = 0; x < website_count; x++)
+    {
+        if (visited[x] == true)
+            continue;
+
+        if(is_connected(x, node))
+        {
+            dfs2(x);
+        }
+    }
+    push(stk,node);
+}
+
+Kosaraju(){
+    for(int i=0;i<website_count;i++){
+        if(!visited[i])
+            dfs1(i);
+    }
+    for(int i=0;i<website_count;i++){
+        visited[i]=false;
+    }
+    while(!isempty(stk)){
+        int v = pop(stk);
+        i(!visited[v]){
+            dsf2(v);
+        }
+    }
+}
+
+
 bool mainop8()
 {
     if (mainop1() && checkAntiSymm() && checkTransitive())
