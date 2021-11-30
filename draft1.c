@@ -40,7 +40,7 @@ void menu5op1();
 void menu5op2();
 bool menu5op3();
 bool is_connected(int i, int j);
-bool is_connected2(char *graph, int i, int j);
+bool is_connected2(bool *graph, int i, int j);
 int checkLUB(int i, int j);
 int checkGLB(int i, int j);
 int LUB(int i, int j);
@@ -64,12 +64,12 @@ void connect(int i, int j)
     graph[i * website_count + j] = true;
 }
 
-void connect2(char *graph, int i, int j)
+void connect2(bool *graph, int i, int j)
 {
     graph[i * website_count + j] = true;
 }
 
-void disconnect2(char *graph, int i, int j)
+void disconnect2(bool *graph, int i, int j)
 {
     graph[i * website_count + j] = false;
 }
@@ -79,7 +79,7 @@ bool is_connected(int i, int j)
     return graph[i * website_count + j];
 }
 
-bool is_connected2(char *graph, int i, int j)
+bool is_connected2(bool *graph, int i, int j)
 {
     return graph[i * website_count + j];
 }
@@ -109,6 +109,7 @@ bool path2(int node1, int node2)
 {
     bool *visited = NULL;
     path(node1, node2);
+    return true;
 }
 void print_graph()
 {
@@ -134,12 +135,12 @@ bool valid_char(char c)
     return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') || c == '.' || c == '_' || c == '-';
 }
 
-void parse_header(char *header)
+void parse_header(bool *header)
 {
     int count = 0;
-    websites = malloc(sizeof(char *) * 100);
+    websites = malloc(sizeof(bool *) * 100);
 
-    char *website = (char *)malloc(sizeof(char) * 100);
+    bool *website = (bool *)malloc(sizeof(char) * 100);
     int header_length = strlen(header);
     //start at 1 to skip starting comma
     for (int i = 1; i < header_length; i++)
@@ -187,7 +188,7 @@ void convertToCSV(bool *graph)
 
     for (int i = 0; i < website_count; i++)
     {
-        fprintf(p, "%s,%d", websites[i], i);
+        fprintf(p, "%s %d", websites[i], i);
         if (i != website_count - 1)
             fprintf(p, ",");
     }
@@ -497,7 +498,7 @@ void menu2(int n)
 
 void fill1()
 {
-    char *graph1 = malloc(sizeof(char) * website_count * website_count);
+    bool *graph1 = malloc(sizeof(char) * website_count * website_count);
     memcpy(graph1, graph, sizeof(char) * website_count * website_count);
     for (int i = 0; i < website_count; i++)
     {
@@ -512,7 +513,7 @@ void fill1()
 }
 void fill2()
 {
-    char *graph2 = malloc(sizeof(char) * website_count * website_count);
+    bool *graph2 = malloc(sizeof(char) * website_count * website_count);
     memcpy(graph2, graph, sizeof(char) * website_count * website_count);
     for (int i = 0; i < website_count; i++)
     {
@@ -530,7 +531,7 @@ void fill2()
 }
 void fill3()
 {
-    char *graph3 = malloc(sizeof(char) * website_count * website_count);
+    bool *graph3 = malloc(sizeof(char) * website_count * website_count);
     memcpy(graph3, graph, sizeof(char) * website_count * website_count);
     for (int i = 0; i < website_count; i++)
     {
@@ -621,7 +622,7 @@ void menu4()
 
 void menu4op1()
 {
-    char *hasse = malloc(sizeof(char) * website_count * website_count);
+    bool *hasse = malloc(sizeof(char) * website_count * website_count);
     memcpy(hasse, graph, sizeof(char) * website_count * website_count);
     for (int i = 0; i < website_count; i++)
     {
